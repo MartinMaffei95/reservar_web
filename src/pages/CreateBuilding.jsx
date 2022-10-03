@@ -21,6 +21,7 @@ import {
   Container,
 } from '@mui/material';
 
+import { v4 as uuidv4 } from 'uuid';
 //FORMIK
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -33,35 +34,8 @@ const CreateBuilding = () => {
     needConfirmation: '',
   };
 
-  const [spaces, setSpaces] = useState([]);
-  const [newSpace, setNewSpace] = useState({
-    space_name: '',
-    timeSlotsFormat: '',
-    needConfirmation: false,
-  });
-
-  const handleSpace = (e) => {
-    const { name, value } = e.target;
-    setNewSpace({ ...newSpace, [name]: value });
-  };
-
-  const saveSpace = () => {
-    setSpaces([...spaces, newSpace]);
-    setNewSpace({
-      space_name: '',
-      timeSlotsFormat: '',
-      needConfirmation: false,
-    });
-    console.log(spaces);
-  };
-
   const SpacesCreated = ({ name, resFor, reqAuth }) => (
-    <Accordion
-      elevation={4}
-      sx={cardSpaceStyle}
-      expanded={expanded === name}
-      onChange={handleExpanded(name)}
-    >
+    <Accordion elevation={4} sx={cardSpaceStyle}>
       <AccordionSummary
         expandIcon={'▼'}
         sx={{
@@ -81,8 +55,12 @@ const CreateBuilding = () => {
             </Button>
           </Tooltip> */}
           <Tooltip title="Delete">
-            <Button onClick={removeCardSpace} id={name}>
-              <AiOutlineDelete />
+            <Button
+              onClick={removeCardSpace}
+              id={name}
+              sx={{ background: 'lightblue' }}
+            >
+              <AiOutlineDelete onClick={removeCardSpace} id={name} />
             </Button>
           </Tooltip>
         </ButtonGroup>
@@ -97,7 +75,30 @@ const CreateBuilding = () => {
     </Accordion>
   );
 
-  const onSubmit = () => {};
+  const onSubmit = () => {
+    console.log({
+      name: values.name,
+      buildingIdentifier: uuidv4(),
+      spaces: spaces,
+    });
+    fetch('http://localhost:5000/buildings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYzMzYxMTExYzcwMDExNDQxN2QzMDg0OSIsInVzZXJuYW1lIjoibWFydGluIiwicGFzc3dvcmQiOiIkMmIkMTAkQ25xaFFVNEVkZHlHeFEwc0hzMUp3T0xoWDY4OHA1OC9pUXpkV0RXem43cTBYWk1nc0hua2kiLCJjcmVhdGVkQXQiOjE2NjQ0ODc2OTc2NzMsInVwZGF0ZWRBdCI6MTY2NDQ4NzY5NzY3MywiX192IjowfSwiaWF0IjoxNjY0ODA5MzEzfQ.JrrL9-imwp2QxqdTXtLSAlZThvb9pC8LMywSeFvIDSE',
+      },
+      body: JSON.stringify({
+        name: values.name,
+        buildingIdentifier: uuidv4(),
+        spaces: spaces,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      });
+  };
 
   const errorMessages = {
     required: '* Este campo es requerido',
@@ -109,6 +110,7 @@ const CreateBuilding = () => {
       .required(errorMessages.required),
   });
 
+  //Principal Form
   const formik = useFormik({ initialValues, onSubmit, validationSchema });
   const {
     handleChange,
@@ -120,8 +122,46 @@ const CreateBuilding = () => {
     setFieldValue,
   } = formik;
 
-  const [expanded, setExpanded] = useState(false);
+  //Space Form
 
+  const SpaceValidationSchema = Yup.object().shape({
+    space_name: Yup.string()
+      .min(4, 'La cantidad minima de caracteres es 4')
+      .required(errorMessages.required),
+    timeSlotsFormat: Yup.string().required(errorMessages.required),
+    needConfirmation: Yup.boolean().required(errorMessages.required),
+  });
+
+  const spaceInitialValues = {
+    space_name: '',
+    timeSlotsFormat: '',
+    needConfirmation: false,
+  };
+
+  const spaceSubmit = () => {
+    if (
+      spaces.find((space) => space.space_name === SpaceFormik.values.space_name)
+    ) {
+      return alert('ya xiste');
+    }
+    console.log(spaces);
+    setSpaces([
+      ...spaces,
+      {
+        space_name: SpaceFormik.values.space_name,
+        timeSlotsFormat: SpaceFormik.values.timeSlotsFormat,
+        needConfirmation: SpaceFormik.values.needConfirmation,
+      },
+    ]);
+    SpaceFormik.resetForm();
+  };
+
+  const SpaceFormik = useFormik({
+    initialValues: spaceInitialValues,
+    onSubmit: spaceSubmit,
+    validationSchema: SpaceValidationSchema,
+  });
+  const [expanded, setExpanded] = useState(false);
   const handleExpanded = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -130,6 +170,13 @@ const CreateBuilding = () => {
     maxWidth: '95%',
     minWidth: '90%',
   };
+
+  const [spaces, setSpaces] = useState([]); //Array with spaces - fetch POST
+  const [newSpace, setNewSpace] = useState({
+    space_name: '',
+    timeSlotsFormat: '',
+    needConfirmation: false,
+  });
 
   const removeCardSpace = (e) => {
     let spacesList = spaces.filter((sp) => sp.space_name !== e.target.id);
@@ -152,11 +199,13 @@ const CreateBuilding = () => {
         }}
       >
         <TextField
+          error={errors.name && touched.name}
           name={'name'}
           onChange={handleChange}
           onBlur={handleBlur}
           label="Nombre del edificio"
           variant="filled"
+          value={values.name}
         />
 
         <Stack
@@ -170,6 +219,7 @@ const CreateBuilding = () => {
           {spaces &&
             spaces.map((sp) => (
               <SpacesCreated
+                key={sp.space_name}
                 name={sp.space_name}
                 resFor={sp.timeSlotsFormat}
                 reqAuth={sp.needConfirmation}
@@ -177,10 +227,7 @@ const CreateBuilding = () => {
             ))}
         </Stack>
         <div>
-          <Accordion
-            expanded={expanded === 'panel1'}
-            onChange={handleExpanded('panel1')}
-          >
+          <Accordion>
             <AccordionSummary
               expandIcon={'▼'}
               aria-controls="panel1bh-content"
@@ -192,11 +239,15 @@ const CreateBuilding = () => {
               <Grid container direction="column" justifyContent="center">
                 <FormControl variant="filled">
                   <TextField
+                    error={
+                      SpaceFormik.errors.space_name &&
+                      SpaceFormik.touched.space_name
+                    }
                     name={'space_name'}
-                    value={newSpace?.space_name}
+                    value={SpaceFormik.values.space_name}
                     label="Nombre"
                     variant="filled"
-                    onChange={handleSpace}
+                    onChange={SpaceFormik.handleChange}
                   />
 
                   <FormControl variant="filled">
@@ -204,8 +255,12 @@ const CreateBuilding = () => {
 
                     <Select
                       name={'timeSlotsFormat'}
-                      value={newSpace?.timeSlotsFormat}
-                      onChange={handleSpace}
+                      error={
+                        SpaceFormik.errors.timeSlotsFormat &&
+                        SpaceFormik.touched.timeSlotsFormat
+                      }
+                      value={SpaceFormik.values.timeSlotsFormat}
+                      onChange={SpaceFormik.handleChange}
                     >
                       <MenuItem value={'PER_DAY'}>DIA</MenuItem>
                       <MenuItem value={'BY_TIME_SLOT'}>FRANJA HORARIA</MenuItem>
@@ -217,11 +272,15 @@ const CreateBuilding = () => {
                       Necesita autorizacion?
                     </Typography>
                     <ToggleButtonGroup
-                      value={newSpace?.needConfirmation}
+                      error={
+                        SpaceFormik.errors.needConfirmation &&
+                        SpaceFormik.touched.needConfirmation
+                      }
+                      value={SpaceFormik.values.needConfirmation}
+                      onChange={SpaceFormik.handleChange}
                       color="primary"
                       exclusive
                       fullWidth
-                      onChange={handleSpace}
                     >
                       <ToggleButton name={'needConfirmation'} value="true">
                         SI
@@ -232,14 +291,16 @@ const CreateBuilding = () => {
                     </ToggleButtonGroup>
                   </Container>
                 </FormControl>
-                <Button onClick={saveSpace} variant="outlined">
+                <Button onClick={SpaceFormik.handleSubmit} variant="outlined">
                   Crear zona comun
                 </Button>
               </Grid>
             </AccordionDetails>
           </Accordion>
         </div>
-        <Button variant="outlined">Guardar Edificio</Button>
+        <Button onClick={handleSubmit} variant="outlined">
+          Guardar Edificio
+        </Button>
       </Grid>
     </div>
   );

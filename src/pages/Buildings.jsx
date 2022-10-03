@@ -16,6 +16,7 @@ const Buildings = () => {
       .then((res) => res.json())
       .then((data) => {
         setBuildings(data?.building);
+        console.log(data?.building);
       });
   };
   useEffect(() => {
