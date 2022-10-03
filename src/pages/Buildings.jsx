@@ -1,6 +1,7 @@
-import './App.css';
+import React from 'react';
 import { useEffect, useState } from 'react';
-function App() {
+
+const Buildings = () => {
   const [buildings, setBuildings] = useState([]);
 
   const getData = () => {
@@ -21,7 +22,6 @@ function App() {
     getData();
     // console.log(buildings);
   }, []);
-
   return (
     <div className="App">
       <h3>Mis Edificios</h3>
@@ -43,6 +43,6 @@ function App() {
         ))}
     </div>
   );
-}
+};
 
-export default App;
+export default Buildings;
