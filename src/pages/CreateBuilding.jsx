@@ -25,6 +25,7 @@ import { v4 as uuidv4 } from 'uuid';
 //FORMIK
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import Header from '../Components/Header';
 
 const CreateBuilding = () => {
   const initialValues = {
@@ -187,11 +188,13 @@ const CreateBuilding = () => {
 
   return (
     <div>
-      <h3>CREAR EDIFICIO</h3>
+      <Header />
       <Grid
         container
         direction="column"
         justifyContent="center"
+        mt={5}
+        mb={5}
         sx={{
           maxWidth: '90%',
           minWidth: '80%',

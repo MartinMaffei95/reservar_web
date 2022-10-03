@@ -1,5 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
+import Header from '../Components/Header';
 
 const Buildings = () => {
   const [buildings, setBuildings] = useState([]);
@@ -25,7 +26,7 @@ const Buildings = () => {
   }, []);
   return (
     <div className="App">
-      <h3>Mis Edificios</h3>
+      <Header />
       {buildings &&
         buildings?.map((b) => (
           <div
