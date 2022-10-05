@@ -77,12 +77,7 @@ const CreateBuilding = () => {
   );
 
   const onSubmit = () => {
-    console.log({
-      name: values.name,
-      buildingIdentifier: uuidv4(),
-      spaces: spaces,
-    });
-    fetch('http://localhost:5000/buildings', {
+    fetch(`${process.env.REACT_APP_URI}/buildings`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -98,6 +93,10 @@ const CreateBuilding = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('MAAAAAAAAAAAAAAAL');
       });
   };
 

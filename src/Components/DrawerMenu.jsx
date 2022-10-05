@@ -22,11 +22,15 @@ export default function DrawerMenu({ toggleDrawer, state }) {
             <ListComp
               text="CREAR RESERVA"
               iconElement={<MdOutlineAddToPhotos />}
-              redirect={'/buildings/create'}
+              redirect={'/bookings/create'}
             ></ListComp>
             <Divider />
             <ListComp text="Mi usuario" iconElement={<BiUserCircle />} />
-            <ListComp text="Mis reservas" iconElement={<BsCalendarCheck />} />
+            <ListComp
+              text="Mis reservas"
+              iconElement={<BsCalendarCheck />}
+              redirect={'/bookings/'}
+            />
             <ListComp
               text="Mis edificios"
               iconElement={<BsBuilding />}
