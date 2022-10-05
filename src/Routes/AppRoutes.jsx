@@ -7,6 +7,7 @@ import CreateBuilding from '../pages/CreateBuilding';
 import CreateBookings from '../pages/CreateBookings';
 import Bookings from '../pages/Bookings';
 import CommonArea from '../pages/CommonArea';
+import BuildingPage from '../pages/BuildingPage';
 
 const AppRoutes = () => {
   return (
@@ -15,6 +16,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/buildings">
           <Route path="" element={<Buildings />} />
+          <Route path=":buildingId" element={<BuildingPage />} />
           <Route path="create" element={<CreateBuilding />} />
           {/* <Route path=":buildingId" element={<CreateBuilding />} /> */}
           <Route path=":buildingId/:spaceId" element={<CommonArea />} />

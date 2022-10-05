@@ -76,8 +76,9 @@ const CreateBookings = () => {
   const { data, loading, error } = useFetch('buildings');
   const [buildings, setBuildings] = useState([]);
   const [buildingIndex, setBuildingIndex] = useState(0);
-  const [spaceIndex, setSpaceIndex] = useState(0);
+  const [spaceIndex, setSpaceIndex] = useState(null);
   const [renderBookings, setRenderBookings] = useState({});
+  const [disabled, setDisabled] = useState(true);
 
   useEffect(() => {
     setBuildings(data?.building);
@@ -90,11 +91,15 @@ const CreateBookings = () => {
 
   useEffect(() => {
     sendBookings();
-  }, [spaceIndex]);
+    if (buildings[buildingIndex]?.spaces[spaceIndex]) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [spaceIndex, buildingIndex]);
 
   return (
     <div>
-      <button onClick={sendBookings}>TEST</button>
       <Header />
       <Grid
         container
@@ -161,6 +166,7 @@ const CreateBookings = () => {
           action={formik}
           values={values?.date}
           bookings={renderBookings}
+          disabled={disabled}
         />
 
         <FormControl variant="filled">

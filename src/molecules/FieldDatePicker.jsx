@@ -89,6 +89,7 @@ const FieldDatePicker = ({
   action,
   onlyCalendar = false,
   bookings,
+  disabled,
 }) => {
   const [dateState, setDateState] = useState(action?.values?.date || moment());
   const [renderBookings, setRenderBookings] = useState({});
@@ -111,6 +112,7 @@ const FieldDatePicker = ({
       <LocalizationProvider dateAdapter={AdapterMoment}>
         {onlyCalendar ? (
           <CalendarPicker
+            disabled={disabled}
             inputFormat="MM/DD/YYYY"
             date={dateState}
             onChange={handleDate}
@@ -118,6 +120,7 @@ const FieldDatePicker = ({
           />
         ) : !isPhone ? (
           <DesktopDatePicker
+            disabled={disabled}
             label="Date desktop"
             inputFormat="MM/DD/YYYY"
             name="date"
@@ -128,6 +131,7 @@ const FieldDatePicker = ({
           />
         ) : (
           <MobileDatePicker
+            disabled={disabled}
             label="Date mobile"
             inputFormat="MM/DD/YYYY"
             name="date"

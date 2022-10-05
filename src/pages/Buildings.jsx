@@ -21,7 +21,7 @@ const Buildings = () => {
     setBuildings(data?.building);
   }, [loading]);
 
-  const BuildingCard = ({ buildingName, admin, space }) => (
+  const BuildingCard = ({ buildingName, buildingId, admin, space }) => (
     <Card variant="outlined" sx={{ minWidth: 275 }}>
       <CardContent>
         <Typography variant="h5" component="div">
@@ -35,7 +35,14 @@ const Buildings = () => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Ver edificio</Button>
+        <Button
+          size="small"
+          onClick={() => {
+            navigate(`/buildings/${buildingId}`, { replace: false });
+          }}
+        >
+          Ver edificio
+        </Button>
       </CardActions>
     </Card>
   );
@@ -59,6 +66,7 @@ const Buildings = () => {
           <BuildingCard
             key={b._id}
             buildingName={b.name}
+            buildingId={b._id}
             admin={b.admin[0].username}
             space={b?.spaces[0]?.name}
           />
