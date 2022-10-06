@@ -33,7 +33,6 @@ const CommonArea = () => {
   // MY BOOKINGS -use this for set object "bookings" and send to calendarPicker
 
   useEffect(() => {
-    console.log(data?.bookings);
     setBookings(data?.bookings);
   }, [loading]);
 

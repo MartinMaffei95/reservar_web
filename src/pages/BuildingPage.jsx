@@ -32,7 +32,6 @@ const BuildingPage = () => {
 
   useEffect(() => {
     setBuilding(data.building);
-    console.log(data.building);
   }, [loading]);
 
   const accordeonStyle = {
@@ -145,9 +144,9 @@ const BuildingPage = () => {
           >
             <Typography>INQUILINOS:</Typography>
             <Button
-              // onClick={() => {
-              //   navigate('/buildings/create');
-              // }}
+              onClick={() => {
+                navigate(`tenants`);
+              }}
               variant="outlined"
               startIcon={<MdOutlinePersonAddAlt />}
             >

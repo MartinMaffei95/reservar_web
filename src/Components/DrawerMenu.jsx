@@ -32,6 +32,11 @@ export default function DrawerMenu({ toggleDrawer, state }) {
               redirect={'/bookings/'}
             />
             <ListComp
+              text="Invitaciones"
+              iconElement={<BsCalendarCheck />}
+              redirect={'/user/requests'}
+            />
+            <ListComp
               text="Mis edificios"
               iconElement={<BsBuilding />}
               redirect={'/buildings/'}
