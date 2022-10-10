@@ -1,27 +1,25 @@
 import { useEffect, useState } from 'react';
-import Header from '../Components/Header';
+import Header from '../../Components/Header';
 import { Routes, Route, useParams, useNavigate } from 'react-router-dom';
-import useFetch from '../Hooks/useFetch';
-import FieldDatePicker from '../molecules/FieldDatePicker';
-import useSwitchBookings from '../Hooks/useSwitchBookings';
+import useFetch from '../../Hooks/useFetch';
+import FieldDatePicker from '../../molecules/FieldDatePicker';
+import useSwitchBookings from '../../Hooks/useSwitchBookings';
 import { AiFillQuestionCircle } from 'react-icons/ai';
 
 import {
   Box,
   Button,
-  Card,
   Typography,
-  CardContent,
-  CardActions,
   Tooltip,
   Icon,
   Accordion,
   AccordionSummary,
-  ButtonGroup,
   AccordionDetails,
 } from '@mui/material/';
 
 import moment from 'moment';
+import BookingCreated from '../../Components/BookingCreated';
+import { accordionSummaryStyle } from '../../muiStyles';
 
 const CommonArea = () => {
   let { spaceId } = useParams();
@@ -48,33 +46,9 @@ const CommonArea = () => {
     </>
   );
 
-  const BookingsCreated = ({ date, time, bookedBy }) => (
-    <Accordion elevation={4}>
-      <AccordionSummary
-        expandIcon={'▼'}
-        sx={{
-          display: 'flex',
-          flexDirection: 'row-reverse',
-          '& .MuiAccordionSummary-content': {
-            justifyContent: 'space-between',
-          },
-          gap: '1rem',
-        }}
-      >
-        <Typography>{moment(date).format('MM/DD')}</Typography>
-        <Typography>{time}</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Typography>{bookedBy}</Typography>
-        <Typography>{moment(date).format('MM/DD')}</Typography>
-        <Typography>{time}</Typography>
-      </AccordionDetails>
-    </Accordion>
-  );
-
   return (
     <div>
-      <Header />
+      <Header backButton title={'Zona comun - &&NOMBRE+SALA&&'} />
       <Box sx={{ display: 'flex' }}>
         <Typography>Reservas de este mes</Typography>
         <Tooltip arrow title={helpText}>
@@ -90,19 +64,13 @@ const CommonArea = () => {
         <Accordion elevation={4}>
           <AccordionSummary
             expandIcon={'▼'}
-            sx={{
-              display: 'flex',
-              '& .MuiAccordionSummary-content': {
-                justifyContent: 'space-between',
-              },
-              gap: '1rem',
-            }}
+            sx={(accordionSummaryStyle, { flexDirection: 'row' })}
           >
             <Typography>Reservas</Typography>
           </AccordionSummary>
           <AccordionDetails>
             {bookings.map((res) => (
-              <BookingsCreated
+              <BookingCreated
                 date={res?.date}
                 time={res?.time}
                 bookedBy={res?.bookedBy?.username}

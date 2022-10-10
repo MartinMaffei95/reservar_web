@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import {
   Paper,
@@ -25,7 +25,10 @@ import { v4 as uuidv4 } from 'uuid';
 //FORMIK
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import Header from '../Components/Header';
+import Header from '../../Components/Header';
+
+import usePostFetch from '../../Hooks/usePostFetch';
+import { useNavigate } from 'react-router-dom';
 
 const CreateBuilding = () => {
   const initialValues = {
@@ -75,29 +78,16 @@ const CreateBuilding = () => {
       </AccordionDetails>
     </Accordion>
   );
+  const navigate = useNavigate();
+  const { data, loading, error, fetchPostData } = usePostFetch();
 
   const onSubmit = () => {
-    fetch(`${process.env.REACT_APP_URI}/buildings`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYzMzYxMTExYzcwMDExNDQxN2QzMDg0OSIsInVzZXJuYW1lIjoibWFydGluIiwicGFzc3dvcmQiOiIkMmIkMTAkQ25xaFFVNEVkZHlHeFEwc0hzMUp3T0xoWDY4OHA1OC9pUXpkV0RXem43cTBYWk1nc0hua2kiLCJjcmVhdGVkQXQiOjE2NjQ0ODc2OTc2NzMsInVwZGF0ZWRBdCI6MTY2NDQ4NzY5NzY3MywiX192IjowfSwiaWF0IjoxNjY0ODA5MzEzfQ.JrrL9-imwp2QxqdTXtLSAlZThvb9pC8LMywSeFvIDSE',
-      },
-      body: JSON.stringify({
-        name: values.name,
-        buildingIdentifier: uuidv4(),
-        spaces: spaces,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => {
-        console.log(err);
-        alert('MAAAAAAAAAAAAAAAL');
-      });
+    const bodyObject = {
+      name: values.name,
+      buildingIdentifier: uuidv4(),
+      spaces: spaces,
+    };
+    fetchPostData('buildings', bodyObject);
   };
 
   const errorMessages = {
@@ -185,9 +175,15 @@ const CreateBuilding = () => {
   };
   const editCardSpace = () => {};
 
+  useEffect(() => {
+    if (data.message === 'CREADO') {
+      return navigate('/buildings', { replace: true });
+    }
+  }, [loading]);
+
   return (
     <div>
-      <Header />
+      <Header title={'Creando edificio'} />
       <Grid
         container
         direction="column"

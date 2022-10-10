@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Header from '../Components/Header';
+import Header from '../../Components/Header';
 import {
   Grid,
   FormControl,
@@ -12,8 +12,8 @@ import {
 //FORMIK + YUP
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import useFetch from '../Hooks/useFetch';
-import FieldDatePicker from '../molecules/FieldDatePicker';
+import useFetch from '../../Hooks/useFetch';
+import FieldDatePicker from '../../molecules/FieldDatePicker';
 
 import moment from 'moment';
 
@@ -100,7 +100,7 @@ const CreateBookings = () => {
 
   return (
     <div>
-      <Header />
+      <Header title={'Creando reserva'} />
       <Grid
         container
         direction="column"

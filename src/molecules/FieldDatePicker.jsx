@@ -12,6 +12,11 @@ import {
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import moment from 'moment';
 import useSwitchBookings from '../Hooks/useSwitchBookings';
+import {
+  calendarDayStyle_afternon,
+  calendarDayStyle_morning,
+  calendarDayStyle_night,
+} from '../muiStyles';
 
 const renderizeDays = (bookings) => (day, selectedDays, pickersDayProps) => {
   let selectedMuiClass = { background: 'red' };
@@ -23,58 +28,18 @@ const renderizeDays = (bookings) => (day, selectedDays, pickersDayProps) => {
   if (
     bookings?.nightBookings?.find((date) => moment(date).isSame(day, 'day'))
   ) {
-    selectedDay_night = {
-      position: 'relative',
-      '& >span': { overflow: 'visible' },
-      '& >::before': {
-        content: `''`,
-        position: 'absolute',
-        right: '0',
-        top: '0',
-        width: '1px',
-        height: '1px',
-        background: 'purple',
-        border: 'solid 4px purple',
-        borderRadius: '50%',
-      },
-    };
+    selectedDay_night = calendarDayStyle_night;
   }
 
   if (
     bookings?.afternonBookings?.find((date) => moment(date).isSame(day, 'day'))
   ) {
-    selectedDay_afternon = {
-      position: 'relative',
-      '&::after': {
-        content: `''`,
-        position: 'absolute',
-        left: 'calc(50% - 4px)',
-        top: '0',
-        width: '1px',
-        height: '1px',
-        background: 'orange',
-        border: 'solid 4px orange',
-        borderRadius: '50%',
-      },
-    };
+    selectedDay_afternon = calendarDayStyle_afternon;
   }
   if (
     bookings?.morningBookings?.find((date) => moment(date).isSame(day, 'day'))
   ) {
-    selectedDay_morning = {
-      position: 'relative',
-      '&::before': {
-        content: `''`,
-        position: 'absolute',
-        left: '0',
-        top: '0',
-        width: '1px',
-        height: '1px',
-        background: 'green',
-        border: 'solid 4px green',
-        borderRadius: '50%',
-      },
-    };
+    selectedDay_morning = calendarDayStyle_morning;
   }
   return (
     <PickersDay
@@ -112,6 +77,7 @@ const FieldDatePicker = ({
       <LocalizationProvider dateAdapter={AdapterMoment}>
         {onlyCalendar ? (
           <CalendarPicker
+            disablePast
             disabled={disabled}
             inputFormat="MM/DD/YYYY"
             date={dateState}
@@ -120,6 +86,7 @@ const FieldDatePicker = ({
           />
         ) : !isPhone ? (
           <DesktopDatePicker
+            disablePast
             disabled={disabled}
             label="Date desktop"
             inputFormat="MM/DD/YYYY"
@@ -131,6 +98,7 @@ const FieldDatePicker = ({
           />
         ) : (
           <MobileDatePicker
+            disablePast
             disabled={disabled}
             label="Date mobile"
             inputFormat="MM/DD/YYYY"

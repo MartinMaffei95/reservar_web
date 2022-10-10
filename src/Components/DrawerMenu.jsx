@@ -7,8 +7,11 @@ import ListComp from '../molecules/ListComp';
 import { BiUserCircle } from 'react-icons/bi';
 import { BsBuilding, BsCalendarCheck, BsDoorClosed } from 'react-icons/bs';
 import { MdOutlineAddToPhotos } from 'react-icons/md';
+import useLogOut from '../Controllers/logout';
 
 export default function DrawerMenu({ toggleDrawer, state }) {
+  const { handleLogout } = useLogOut();
+
   return (
     <div>
       <React.Fragment key={'left'}>
@@ -42,7 +45,11 @@ export default function DrawerMenu({ toggleDrawer, state }) {
               redirect={'/buildings/'}
             />
             <Divider />
-            <ListComp text="CERRAR SESION" iconElement={<BsDoorClosed />} />
+            <ListComp
+              clickAction={handleLogout}
+              text="CERRAR SESION"
+              iconElement={<BsDoorClosed />}
+            />
           </Box>
         </Drawer>
       </React.Fragment>

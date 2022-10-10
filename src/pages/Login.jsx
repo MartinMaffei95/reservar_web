@@ -20,7 +20,6 @@ const Login = () => {
   };
 
   const onSubmit = () => {
-    // console.log();
     fetchPostData('auth/login', values);
   };
 

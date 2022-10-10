@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MdArrowBackIosNew } from 'react-icons/md';
 import { MdMenu, MdOutlineAccountCircle } from 'react-icons/md';
 import {
   Typography,
@@ -12,8 +11,9 @@ import {
 } from '@mui/material';
 import DrawerMenu from './DrawerMenu';
 import { useState } from 'react';
+import BackButton from '../molecules/BackButton';
 
-const Header = ({ title, children }) => {
+const Header = ({ title, backButton, children }) => {
   // Recives in the children button to post a Post or Comment
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -48,13 +48,15 @@ const Header = ({ title, children }) => {
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 }}
             onClick={toggleDrawer(true)}
           >
             <MdMenu />
           </IconButton>
+
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Mis edificios
+            {backButton && <BackButton />}
+
+            {title}
           </Typography>
           <div>
             <IconButton

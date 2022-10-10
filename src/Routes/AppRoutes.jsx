@@ -7,15 +7,16 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import Home from '../pages/Home';
-import Buildings from '../pages/Buildings';
-import CreateBuilding from '../pages/CreateBuilding';
-import CreateBookings from '../pages/CreateBookings';
-import Bookings from '../pages/Bookings';
-import CommonArea from '../pages/CommonArea';
-import BuildingPage from '../pages/BuildingPage';
-import AddTenantPage from '../pages/AddTenantPage';
-import BuildingRequests from '../pages/BuildingRequests';
+import Buildings from '../pages/Buildings/Buildings';
+import CreateBuilding from '../pages/Buildings/CreateBuilding';
+import CreateBookings from '../pages/Bookings/CreateBookings';
+import Bookings from '../pages/Bookings/Bookings';
+import CommonArea from '../pages/Spaces/CommonArea';
+import BuildingPage from '../pages/Buildings/BuildingPage';
+import AddTenantPage from '../pages/Buildings/AddTenantPage';
+import BuildingRequests from '../pages/Buildings/BuildingRequests';
 import Login from '../pages/Login';
+import CreateSpace from '../pages/Spaces/CreateSpace';
 
 const AppRoutes = () => {
   const RequireAuth = ({ children }) => {
@@ -28,6 +29,7 @@ const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
+        {/* HOME ROUTE */}
         <Route
           path="/"
           element={
@@ -36,6 +38,8 @@ const AppRoutes = () => {
             </RequireAuth>
           }
         />
+
+        {/* BUILDINGS ROUTES */}
 
         <Route path="/buildings">
           <Route
@@ -47,7 +51,7 @@ const AppRoutes = () => {
             }
           />
           <Route
-            path="create"
+            path="create" // Use this route to create a new building
             element={
               <RequireAuth>
                 <CreateBuilding />
@@ -59,6 +63,14 @@ const AppRoutes = () => {
             element={
               <RequireAuth>
                 <BuildingPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path=":buildingId/create" // Use this route to create a new space in buildings
+            element={
+              <RequireAuth>
+                <CreateSpace />
               </RequireAuth>
             }
           />
@@ -80,6 +92,8 @@ const AppRoutes = () => {
           />
         </Route>
 
+        {/* BOOKINGS ROUTES */}
+
         <Route path="/bookings">
           <Route
             path=""
@@ -98,6 +112,9 @@ const AppRoutes = () => {
             }
           />
         </Route>
+
+        {/* USER ROUTES */}
+
         <Route path="/user">
           <Route
             path="requests"

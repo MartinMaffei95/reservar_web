@@ -8,13 +8,14 @@ import ListItemText from '@mui/material/ListItemText';
 import { MdOutlineInbox, MdOutlineMail } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
-const ListComp = ({ text, iconElement, redirect }) => {
+const ListComp = ({ text, iconElement, redirect, clickAction }) => {
   const navigate = useNavigate();
 
   return (
     <List
       onClick={() => {
-        navigate(redirect);
+        if (redirect) return navigate(redirect);
+        if (clickAction) return clickAction();
       }}
     >
       <ListItem key={text} disablePadding>

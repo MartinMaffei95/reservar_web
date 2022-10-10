@@ -1,19 +1,21 @@
 import { useState, useEffect } from 'react';
 
-const useFetch = (endpoint, token) => {
+const useDeleteFetch = (endpoint, bodyData) => {
   // action = 'GET','POST','PUT' 'DELETE';
   const [data, setData] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const fetchGetData = (endpoint) => {
+  const fetchDeleteData = (endpoint, bodyData) => {
+    console.log(endpoint, bodyData);
     setLoading(true);
     fetch(`${process.env.REACT_APP_URI}/${endpoint}`, {
-      method: 'GET',
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
+      body: JSON.stringify(bodyData),
     })
       .then((res) => res.json())
       .then((data) => {
@@ -27,11 +29,12 @@ const useFetch = (endpoint, token) => {
   };
 
   useEffect(() => {
+    if (!bodyData) return;
     if (!endpoint) return;
-    fetchGetData(endpoint);
+    fetchDeleteData(endpoint, bodyData);
   }, []);
 
-  return { data, loading, error, fetchGetData };
+  return { data, loading, error, fetchDeleteData };
 };
 
-export default useFetch;
+export default useDeleteFetch;

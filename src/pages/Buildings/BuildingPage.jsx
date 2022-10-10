@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Routes, Route, useParams, useNavigate } from 'react-router-dom';
-import Header from '../Components/Header';
+import Header from '../../Components/Header';
 import {
   Box,
   Button,
@@ -14,8 +14,11 @@ import {
   AccordionDetails,
   Paper,
 } from '@mui/material/';
-import useFetch from '../Hooks/useFetch';
+import useFetch from '../../Hooks/useFetch';
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
+import moment from 'moment';
 
 import {
   MdOutlinePersonAddAlt,
@@ -23,12 +26,21 @@ import {
   MdOutlineNoMeetingRoom,
   MdOutlineRoomPreferences,
 } from 'react-icons/md';
+import { accordionSummaryStyle, titleStyle } from '../../muiStyles';
 
 const BuildingPage = () => {
   let { buildingId } = useParams();
   const navigate = useNavigate();
   const [building, setBuilding] = useState();
   const { data, loading, error } = useFetch(`buildings/${buildingId}`);
+
+  const isReserved = (bookings) => {
+    for (let i = 0; i < bookings.length; i++) {
+      if (moment(bookings[i]?.date).isSame(moment(), 'day')) {
+        return true;
+      }
+    }
+  };
 
   useEffect(() => {
     setBuilding(data.building);
@@ -39,18 +51,9 @@ const BuildingPage = () => {
     marginBlock: '.5rem',
   };
 
-  const titleStyle = {
-    marginBlock: '1rem .5rem',
-    width: '80vw',
-    height: '3rem',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  };
-
   return (
     <div>
-      <Header />
+      <Header backButton title={'Informacion del edificio'} />
       <Grid
         container
         direction="column"
@@ -62,26 +65,9 @@ const BuildingPage = () => {
         </Paper>
 
         <Accordion sx={accordeonStyle} elevation={4}>
-          <AccordionSummary
-            expandIcon={'▼'}
-            sx={{
-              display: 'flex',
-              flexDirection: 'row-reverse',
-              '& .MuiAccordionSummary-content': {
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              },
-              gap: '1rem',
-            }}
-          >
+          <AccordionSummary expandIcon={'▼'} sx={accordionSummaryStyle}>
             <Typography>ADMINISTRADORES:</Typography>
-            <Button
-              // onClick={() => {
-              //   navigate('/buildings/create');
-              // }}
-              variant="outlined"
-              startIcon={<MdOutlinePersonAddAlt />}
-            >
+            <Button variant="outlined" startIcon={<MdOutlinePersonAddAlt />}>
               add
             </Button>
           </AccordionSummary>
@@ -93,23 +79,12 @@ const BuildingPage = () => {
         </Accordion>
 
         <Accordion sx={accordeonStyle} elevation={4}>
-          <AccordionSummary
-            expandIcon={'▼'}
-            sx={{
-              display: 'flex',
-              flexDirection: 'row-reverse',
-              '& .MuiAccordionSummary-content': {
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              },
-              gap: '1rem',
-            }}
-          >
+          <AccordionSummary expandIcon={'▼'} sx={accordionSummaryStyle}>
             <Typography>SALAS CREADAS:</Typography>
             <Button
-              // onClick={() => {
-              //   navigate('/buildings/create');
-              // }}
+              onClick={() => {
+                navigate(`create`);
+              }}
               variant="outlined"
               startIcon={<MdOutlineMeetingRoom />}
             >
@@ -118,8 +93,13 @@ const BuildingPage = () => {
           </AccordionSummary>
           {building?.spaces?.length > 0 ? (
             building?.spaces?.map((s) => (
-              <AccordionDetails>
-                <Typography>{s.name}</Typography>
+              <AccordionDetails
+                sx={{ display: 'flex', justifyContent: 'space-between' }}
+              >
+                <Typography>
+                  <Link to={`${s._id}`}>{s.name}</Link>
+                </Typography>
+                {isReserved(s?.bookings) ? 'RESERVADO' : 'LIBRE'}
               </AccordionDetails>
             ))
           ) : (
@@ -130,18 +110,7 @@ const BuildingPage = () => {
         </Accordion>
 
         <Accordion sx={accordeonStyle} elevation={4}>
-          <AccordionSummary
-            expandIcon={'▼'}
-            sx={{
-              display: 'flex',
-              flexDirection: 'row-reverse',
-              '& .MuiAccordionSummary-content': {
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              },
-              gap: '1rem',
-            }}
-          >
+          <AccordionSummary expandIcon={'▼'} sx={accordionSummaryStyle}>
             <Typography>INQUILINOS:</Typography>
             <Button
               onClick={() => {

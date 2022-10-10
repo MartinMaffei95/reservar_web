@@ -13,18 +13,16 @@ const usePostFetch = (endpoint, bodyData) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.REACT_APP_TOKEN}`,
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
       body: JSON.stringify(bodyData),
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setLoading(false);
         setData(data);
       })
       .catch((err) => {
-        console.log(err);
         setLoading(false);
         setError(err);
       });

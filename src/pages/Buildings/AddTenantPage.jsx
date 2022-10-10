@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Header from '../Components/Header';
+import Header from '../../Components/Header';
 import { Routes, Route, useParams, useNavigate } from 'react-router-dom';
 import {
   Grid,
@@ -12,16 +12,21 @@ import {
 } from '@mui/material/';
 import { MdOutlinePersonAddAlt } from 'react-icons/md';
 import { MdSearch } from 'react-icons/md';
-import useFetch from '../Hooks/useFetch';
-import usePostFetch from '../Hooks/usePostFetch';
+import useFetch from '../../Hooks/useFetch';
+import usePostFetch from '../../Hooks/usePostFetch';
+import { findeItems, titleStyle } from '../../muiStyles';
+import useDeleteFetch from '../../Hooks/useDeleteFetch';
+import AddTenantButton from '../../molecules/AddTenantButton';
 const AddTenantPage = () => {
   let { buildingId } = useParams();
   const [results, setResults] = useState();
   const [search, setSearch] = useState('');
+  const [buildingData, setBuildingData] = useState();
 
   const postHook = usePostFetch();
+  const deleteHook = useDeleteFetch();
   const { data, loading, error, fetchGetData } = useFetch();
-
+  const buildingFetch = useFetch(`buildings/${buildingId}`);
   const handleSearchValue = (e) => {
     setSearch(e.target.value);
   };
@@ -34,31 +39,34 @@ const AddTenantPage = () => {
     }
   };
 
-  const postData = (userId, bodyData) => {
+  const postAction = (userId, bodyData) => {
     postHook.fetchPostData(`users/${userId}`, bodyData);
   };
 
-  useEffect(() => {
-    setResults(data?.user);
-  }, [loading, postHook.loading]);
-
-  const titleStyle = {
-    marginBlock: '1rem .5rem',
-    height: '3rem',
-    paddingInline: '1.5rem',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  const deleteAction = (userId, bodyData) => {
+    deleteHook.fetchDeleteData(`users/${userId}`, bodyData);
   };
+
+  const [onHover, setOnHover] = useState(false);
+
+  useEffect(() => {
+    buildingFetch.fetchGetData(`buildings/${buildingId}`);
+  }, [postHook?.data, deleteHook?.data]);
+
+  useEffect(() => {
+    setBuildingData(buildingFetch?.data?.building);
+    setResults(data?.user);
+  }, [buildingFetch?.loading, loading]);
 
   return (
     <div>
-      <Header />
+      <Header backButton title={'Agrega inquilinos'} />
+
       <Grid
         container
         direction="column"
         justifyContent="center"
-        mt={5}
+        alignItems="center"
         mb={5}
         sx={{
           maxWidth: '90%',
@@ -66,6 +74,9 @@ const AddTenantPage = () => {
           marginInline: 'auto',
         }}
       >
+        <Paper elevation={4} sx={titleStyle}>
+          <Typography>{buildingData?.name}</Typography>
+        </Paper>
         <Paper
           component="form"
           sx={{
@@ -98,20 +109,34 @@ const AddTenantPage = () => {
         </Paper>
 
         {results ? (
-          results?.map((res) => (
-            <Paper key={res?._id} sx={titleStyle}>
-              <Typography>{res?.username}</Typography>
-              <Button
-                onClick={() => {
-                  postData(res?._id, { buildingId: buildingId });
-                }}
-                variant="outlined"
-                startIcon={<MdOutlinePersonAddAlt />}
-              >
-                add
-              </Button>
-            </Paper>
-          ))
+          results
+            ?.filter((res) => res.username !== localStorage.getItem('username'))
+            .map((res) => (
+              <Paper key={res?._id} sx={findeItems}>
+                <Typography>{res?.username}</Typography>
+                {!buildingData?.requestsSended?.includes(res?._id) ? (
+                  <AddTenantButton
+                    addBtn={true}
+                    deleteAction={() => {
+                      deleteAction(res?._id, { buildingId: buildingId });
+                    }}
+                    postAction={() => {
+                      postAction(res?._id, { buildingId: buildingId });
+                    }}
+                  />
+                ) : (
+                  <AddTenantButton
+                    addBtn={false}
+                    deleteAction={() => {
+                      deleteAction(res?._id, { buildingId: buildingId });
+                    }}
+                    postAction={() => {
+                      postAction(res?._id, { buildingId: buildingId });
+                    }}
+                  />
+                )}
+              </Paper>
+            ))
         ) : (
           <div>Sin resultados</div>
         )}
