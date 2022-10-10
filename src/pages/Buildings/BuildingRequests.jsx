@@ -4,7 +4,8 @@ import useFetch from '../../Hooks/useFetch';
 import Header from '../../Components/Header';
 import CardInviteRequest from '../../Components/CardInviteRequest';
 
-import { Grid } from '@mui/material/';
+import { Grid, Paper, Typography } from '@mui/material/';
+import { titleStyle } from '../../muiStyles';
 
 const BuildingRequests = () => {
   const { data, loading, error, fetchGetData } = useFetch(
@@ -18,7 +19,6 @@ const BuildingRequests = () => {
   return (
     <>
       <Header backButton title={'Invitaciones a edificios'} />
-      <div> SOLICITUDES PENDIENTES</div>
 
       <Grid
         container
@@ -26,7 +26,10 @@ const BuildingRequests = () => {
         justifyContent="center"
         alignItems="center"
       >
-        {requests &&
+        <Paper elevation={4} sx={titleStyle}>
+          <Typography>INVITACIONES A EDIFICIOS</Typography>
+        </Paper>
+        {requests && requests.length > 0 ? (
           requests.map((request) => (
             <CardInviteRequest
               name={request?.name}
@@ -34,7 +37,12 @@ const BuildingRequests = () => {
               requests={requests}
               setRequests={setRequests}
             />
-          ))}
+          ))
+        ) : (
+          <Paper elevation={0} sx={titleStyle}>
+            <Typography>No tienes ninguna invitación</Typography>
+          </Paper>
+        )}
       </Grid>
     </>
   );

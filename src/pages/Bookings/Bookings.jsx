@@ -7,6 +7,7 @@ import useFetch from '../../Hooks/useFetch';
 //MUI importation
 import {
   Box,
+  Paper,
   Button,
   Card,
   Typography,
@@ -17,7 +18,7 @@ import {
 import { TbCalendarStats } from 'react-icons/tb';
 //MOMENT JS
 import moment from 'moment';
-import { buildingCard } from '../../muiStyles';
+import { buildingCard, titleStyle } from '../../muiStyles';
 
 const BookingCard = ({ buildingName, spaces, date, time, redirect }) => (
   <Card variant="outlined" sx={buildingCard}>
@@ -45,8 +46,8 @@ const Bookings = () => {
   const { data, loading, error } = useFetch('bookings/me');
   const navigate = useNavigate();
   useEffect(() => {
-    setBookings(data.booking);
-    console.log(data.booking);
+    setBookings(data?.booking);
+    console.log(data?.booking);
   }, [loading]);
 
   return (
@@ -58,7 +59,7 @@ const Bookings = () => {
         justifyContent="center"
         alignItems="center"
       >
-        {bookings ? (
+        {bookings && bookings.length > 0 ? (
           bookings?.map((booking) => (
             <BookingCard
               key={booking?._id}
@@ -74,7 +75,22 @@ const Bookings = () => {
             />
           ))
         ) : (
-          <div>Nada por aqui! :S</div>
+          <>
+            <Paper elevation={0} sx={titleStyle}>
+              <Typography>No tienes ninguna reserva</Typography>
+            </Paper>
+            <Box mt={2} mb={2}>
+              <Button
+                onClick={() => {
+                  navigate('/bookings/create');
+                }}
+                variant="outlined"
+                //   startIcon={<HiOutlineOfficeBuilding />}
+              >
+                crear una reserva
+              </Button>
+            </Box>
+          </>
         )}
       </Grid>
     </div>

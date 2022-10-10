@@ -40,6 +40,7 @@ const AddTenantButton = ({ addBtn, postAction, deleteAction }) => {
           sx={{
             '&:hover': {
               backgroundColor: 'error.main',
+              borderColor: 'error.main',
               color: '#fff',
             },
           }}

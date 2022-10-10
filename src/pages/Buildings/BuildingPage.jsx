@@ -27,12 +27,20 @@ import {
   MdOutlineRoomPreferences,
 } from 'react-icons/md';
 import { accordionSummaryStyle, titleStyle } from '../../muiStyles';
+import useDeleteFetch from '../../Hooks/useDeleteFetch';
 
 const BuildingPage = () => {
   let { buildingId } = useParams();
   const navigate = useNavigate();
   const [building, setBuilding] = useState();
-  const { data, loading, error } = useFetch(`buildings/${buildingId}`);
+  const { data, loading, error, fetchGetData } = useFetch(
+    `buildings/${buildingId}`
+  );
+
+  const deleteHook = useDeleteFetch();
+  const deleteAction = async (userId, bodyData) => {
+    deleteHook.fetchDeleteData(`users/removeTenant/${userId}`, bodyData);
+  };
 
   const isReserved = (bookings) => {
     for (let i = 0; i < bookings.length; i++) {
@@ -43,14 +51,31 @@ const BuildingPage = () => {
   };
 
   useEffect(() => {
+    if (deleteHook.data.message === 'REMOVED_USER_FROM_BUILDING') {
+      alert('Eliminado');
+      fetchGetData(`buildings/${buildingId}`);
+    }
+  }, [deleteHook?.loading]);
+
+  useEffect(() => {
     setBuilding(data?.building);
-  }, [loading]);
+  }, [loading, deleteHook?.loading]);
 
   const accordeonStyle = {
     width: '90vw',
     marginBlock: '.5rem',
   };
 
+  const VerifiedButton = ({ children }) => {
+    if (
+      building?.admin?.find((admin) =>
+        admin?.username?.includes(localStorage.getItem('username'))
+      )
+    ) {
+      return <>{children}</>;
+    }
+    return;
+  };
   return (
     <div>
       <Header backButton title={'Informacion del edificio'} />
@@ -67,20 +92,17 @@ const BuildingPage = () => {
         <Accordion sx={accordeonStyle} elevation={4}>
           <AccordionSummary expandIcon={'▼'} sx={accordionSummaryStyle}>
             <Typography>ADMINISTRADORES:</Typography>
-            {data?.building?.admin?.map(
-              (admin) =>
-                admin?.username?.includes(localStorage.getItem('username')) && (
-                  <Button
-                    onClick={() => {
-                      navigate(`admin`);
-                    }}
-                    variant="outlined"
-                    startIcon={<MdOutlinePersonAddAlt />}
-                  >
-                    add
-                  </Button>
-                )
-            )}
+            <VerifiedButton>
+              <Button
+                onClick={() => {
+                  navigate(`admin`);
+                }}
+                variant="outlined"
+                startIcon={<MdOutlinePersonAddAlt />}
+              >
+                add
+              </Button>
+            </VerifiedButton>
           </AccordionSummary>
           {building?.admin?.map((a) => (
             <AccordionDetails>
@@ -92,15 +114,17 @@ const BuildingPage = () => {
         <Accordion sx={accordeonStyle} elevation={4}>
           <AccordionSummary expandIcon={'▼'} sx={accordionSummaryStyle}>
             <Typography>SALAS CREADAS:</Typography>
-            <Button
-              onClick={() => {
-                navigate(`create`);
-              }}
-              variant="outlined"
-              startIcon={<MdOutlineMeetingRoom />}
-            >
-              add
-            </Button>
+            <VerifiedButton>
+              <Button
+                onClick={() => {
+                  navigate(`create`);
+                }}
+                variant="outlined"
+                startIcon={<MdOutlineMeetingRoom />}
+              >
+                add
+              </Button>
+            </VerifiedButton>
           </AccordionSummary>
           {building?.spaces?.length > 0 ? (
             building?.spaces?.map((s) => (
@@ -123,19 +147,44 @@ const BuildingPage = () => {
         <Accordion sx={accordeonStyle} elevation={4}>
           <AccordionSummary expandIcon={'▼'} sx={accordionSummaryStyle}>
             <Typography>INQUILINOS:</Typography>
-            <Button
-              onClick={() => {
-                navigate(`tenants`);
-              }}
-              variant="outlined"
-              startIcon={<MdOutlinePersonAddAlt />}
-            >
-              add
-            </Button>
+            <VerifiedButton>
+              <Button
+                onClick={() => {
+                  navigate(`tenants`);
+                }}
+                variant="outlined"
+                startIcon={<MdOutlinePersonAddAlt />}
+              >
+                add
+              </Button>
+            </VerifiedButton>
           </AccordionSummary>
           {building?.tenants?.map((s) => (
-            <AccordionDetails>
+            <AccordionDetails
+              sx={{ display: 'flex', justifyContent: 'space-between' }}
+            >
               <Typography>{s.username}</Typography>
+              <VerifiedButton>
+                <Button
+                  onClick={() => {
+                    deleteAction(s._id, { buildingId: buildingId });
+                  }}
+                  variant="outlined"
+                  startIcon={<MdOutlinePersonAddAlt />}
+                  sx={{
+                    backgroundColor: 'error.main',
+                    borderColor: 'error.main',
+                    color: '#fff',
+                    '&:hover': {
+                      backgroundColor: 'error.main',
+                      borderColor: 'error.main',
+                      color: '#000',
+                    },
+                  }}
+                >
+                  eliminar
+                </Button>
+              </VerifiedButton>
             </AccordionDetails>
           ))}
         </Accordion>
