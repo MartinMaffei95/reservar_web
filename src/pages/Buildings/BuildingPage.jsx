@@ -43,7 +43,7 @@ const BuildingPage = () => {
   };
 
   useEffect(() => {
-    setBuilding(data.building);
+    setBuilding(data?.building);
   }, [loading]);
 
   const accordeonStyle = {
@@ -67,9 +67,20 @@ const BuildingPage = () => {
         <Accordion sx={accordeonStyle} elevation={4}>
           <AccordionSummary expandIcon={'▼'} sx={accordionSummaryStyle}>
             <Typography>ADMINISTRADORES:</Typography>
-            <Button variant="outlined" startIcon={<MdOutlinePersonAddAlt />}>
-              add
-            </Button>
+            {data?.building?.admin?.map(
+              (admin) =>
+                admin?.username?.includes(localStorage.getItem('username')) && (
+                  <Button
+                    onClick={() => {
+                      navigate(`admin`);
+                    }}
+                    variant="outlined"
+                    startIcon={<MdOutlinePersonAddAlt />}
+                  >
+                    add
+                  </Button>
+                )
+            )}
           </AccordionSummary>
           {building?.admin?.map((a) => (
             <AccordionDetails>

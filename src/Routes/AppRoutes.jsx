@@ -18,6 +18,7 @@ import BuildingRequests from '../pages/Buildings/BuildingRequests';
 import Login from '../pages/Login';
 import CreateSpace from '../pages/Spaces/CreateSpace';
 import Register from '../pages/Register';
+import AddAdminPage from '../pages/Buildings/AddAdmingPage';
 
 const AppRoutes = () => {
   const RequireAuth = ({ children }) => {
@@ -59,6 +60,7 @@ const AppRoutes = () => {
               </RequireAuth>
             }
           />
+
           <Route
             path=":buildingId"
             element={
@@ -80,6 +82,14 @@ const AppRoutes = () => {
             element={
               <RequireAuth>
                 <AddTenantPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path=":buildingId/admin" // Use this route to create a new building
+            element={
+              <RequireAuth>
+                <AddAdminPage />
               </RequireAuth>
             }
           />
