@@ -17,6 +17,7 @@ import AddTenantPage from '../pages/Buildings/AddTenantPage';
 import BuildingRequests from '../pages/Buildings/BuildingRequests';
 import Login from '../pages/Login';
 import CreateSpace from '../pages/Spaces/CreateSpace';
+import Register from '../pages/Register';
 
 const AppRoutes = () => {
   const RequireAuth = ({ children }) => {
@@ -128,6 +129,7 @@ const AppRoutes = () => {
 
         {/* ## Login page ## */}
         <Route path="/login" element={<Login />}></Route>
+        <Route path="/register" element={<Register />}></Route>
       </Routes>
     </BrowserRouter>
   );

@@ -7,13 +7,14 @@ import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { initialFormStyle } from '../muiStyles';
 
-const Login = () => {
+const Register = () => {
   const { data, loading, error, fetchPostData } = usePostFetch();
   let navigate = useNavigate();
 
   const initialValues = {
-    username: localStorage.getItem('username') || '',
+    username: '',
     password: '',
+    passwordConfirmation: '',
   };
 
   const keyAction = (e) => {
@@ -21,7 +22,7 @@ const Login = () => {
   };
 
   const onSubmit = () => {
-    fetchPostData('auth/login', values);
+    fetchPostData('auth/register', values);
   };
 
   const errorMessages = {
@@ -35,6 +36,9 @@ const Login = () => {
 
     password: Yup.string()
       .min(4, 'La cantidad minima de caracteres es 4')
+      .required(errorMessages.required),
+    passwordConfirmation: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Las contraseñas no coinciden')
       .required(errorMessages.required),
   });
 
@@ -50,20 +54,16 @@ const Login = () => {
   } = formik;
 
   useEffect(() => {
-    if (data.message === 'LOGIN_SUCCESS') {
-      localStorage.setItem('token', data?.token);
+    if (data.message === 'USER_CREATED') {
       localStorage.setItem('username', data?.user?.username);
-      localStorage.setItem('userID', data?.user?._id);
 
-      if (data?.user?.buildings?.length > 0)
-        return navigate('/bookings/create', { replace: true });
-      else return navigate('/buildings/create', { replace: true });
+      return navigate('/login', { replace: true });
     }
     //ToDo: create error messages
   }, [loading]);
-
   return (
     <>
+      Register
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -72,6 +72,8 @@ const Login = () => {
         autoComplete="off"
       >
         <TextField
+          error={errors?.username && touched?.username && true}
+          helperText={errors?.username && touched?.username && errors?.username}
           id="outlined-required"
           label="Username"
           placeholder="Nombre de usuario"
@@ -83,22 +85,43 @@ const Login = () => {
         />
 
         <TextField
-          id="outlined-password-input"
-          label="Password"
-          type="password"
-          autoComplete="current-password"
+          error={errors?.password && touched?.password && true}
+          helperText={errors?.password && touched?.password && errors?.password}
+          id="outlined-required"
+          label="Tu contraseña"
+          placeholder="MiContraseñaSegura123"
           name={'password'}
           value={values?.password}
           onChange={handleChange}
           onBlur={handleBlur}
           onKeyDown={keyAction}
         />
+
+        <TextField
+          error={
+            errors?.passwordConfirmation &&
+            touched?.passwordConfirmation &&
+            true
+          }
+          helperText={
+            errors?.passwordConfirmation &&
+            touched?.passwordConfirmation &&
+            errors?.passwordConfirmation
+          }
+          id="outlined-required"
+          label="Repeti la contraseña"
+          name={'passwordConfirmation'}
+          value={values?.passwordConfirmation}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onKeyDown={keyAction}
+        />
         <Button type="submit" fullWidth variant="contained" disableElevation>
-          Ingresar
+          Registrarme
         </Button>
       </Box>
     </>
   );
 };
 
-export default Login;
+export default Register;

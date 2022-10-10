@@ -1,3 +1,12 @@
+export const initialFormStyle = {
+  margin: '1em',
+  width: '80vw',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  '& .MuiTextField-root': { m: 1 },
+};
+
 export const titleStyle = {
   marginBlock: '1rem .5rem',
   width: '80vw',

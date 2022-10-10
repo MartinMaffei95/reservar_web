@@ -69,6 +69,7 @@ const Header = ({ title, backButton, children }) => {
             >
               <MdOutlineAccountCircle />
             </IconButton>
+            <span>{localStorage.getItem('username')}</span>
             <Menu
               id="menu-appbar"
               anchorEl={anchorEl}

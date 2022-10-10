@@ -11,11 +11,18 @@ import { buildingCard, cardContent, inviteRequestCard } from '../muiStyles';
 import { MdCheck, MdClose } from 'react-icons/md';
 import usePostFetch from '../Hooks/usePostFetch';
 
-const CardInviteRequest = ({ name, icon, buildingId }) => {
+const CardInviteRequest = ({
+  name,
+  icon,
+  buildingId,
+  requests,
+  setRequests,
+}) => {
   const { data, loading, error, fetchPostData } = usePostFetch();
 
   const acceptRequest = () => {
     fetchPostData(`users/addTenant/${buildingId}`);
+    setRequests(requests.filter((building) => building._id !== buildingId));
   };
 
   return (

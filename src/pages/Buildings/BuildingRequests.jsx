@@ -7,7 +7,7 @@ import CardInviteRequest from '../../Components/CardInviteRequest';
 import { Grid } from '@mui/material/';
 
 const BuildingRequests = () => {
-  const { data, loading, error } = useFetch(
+  const { data, loading, error, fetchGetData } = useFetch(
     `users/${localStorage.getItem('userID')}`
   );
   const [requests, setRequests] = useState();
@@ -28,7 +28,12 @@ const BuildingRequests = () => {
       >
         {requests &&
           requests.map((request) => (
-            <CardInviteRequest name={request?.name} buildingId={request?._id} />
+            <CardInviteRequest
+              name={request?.name}
+              buildingId={request?._id}
+              requests={requests}
+              setRequests={setRequests}
+            />
           ))}
       </Grid>
     </>
