@@ -17,7 +17,7 @@ import FieldDatePicker from '../../molecules/FieldDatePicker';
 
 import moment from 'moment';
 import usePostFetch from '../../Hooks/usePostFetch';
-
+import { useNavigate } from 'react-router-dom';
 const CreateBookings = () => {
   const initialValues = {
     building_name: '',
@@ -25,6 +25,7 @@ const CreateBookings = () => {
     time: '',
     date: moment(),
   };
+  const navigate = useNavigate();
   const postHook = usePostFetch();
   const onSubmit = () => {
     let bodyObject = {
@@ -72,6 +73,7 @@ const CreateBookings = () => {
   useEffect(() => {
     if (postHook?.data?.message === 'BOOKING_CREATED') {
       alert('creada');
+      return navigate(-1);
     }
   }, [postHook?.loading]);
 
@@ -91,7 +93,7 @@ const CreateBookings = () => {
 
   return (
     <div>
-      <Header title={'Creando reserva'} />
+      <Header backButton title={'Creando reserva'} />
       <Grid
         container
         direction="column"

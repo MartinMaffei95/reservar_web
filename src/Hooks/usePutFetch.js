@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 
-const useDeleteFetch = (endpoint, bodyData) => {
+const usePutFetch = (endpoint, bodyData) => {
   // action = 'GET','POST','PUT' 'DELETE';
   const [data, setData] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const fetchDeleteData = (endpoint, bodyData) => {
+  const fetchPutData = (endpoint, bodyData) => {
     setLoading(true);
     fetch(`${process.env.REACT_APP_URI}/${endpoint}`, {
-      method: 'DELETE',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -31,10 +31,10 @@ const useDeleteFetch = (endpoint, bodyData) => {
   useEffect(() => {
     if (!bodyData) return;
     if (!endpoint) return;
-    fetchDeleteData(endpoint, bodyData);
+    fetchPutData(endpoint, bodyData);
   }, []);
 
-  return { data, loading, error, fetchDeleteData };
+  return { data, loading, error, fetchPutData };
 };
 
-export default useDeleteFetch;
+export default usePutFetch;

@@ -19,6 +19,7 @@ import Login from '../pages/Login';
 import CreateSpace from '../pages/Spaces/CreateSpace';
 import Register from '../pages/Register';
 import AddAdminPage from '../pages/Buildings/AddAdmingPage';
+import MyProfile from '../pages/User/MyProfile';
 
 const AppRoutes = () => {
   const RequireAuth = ({ children }) => {
@@ -127,6 +128,14 @@ const AppRoutes = () => {
         {/* USER ROUTES */}
 
         <Route path="/user">
+          <Route
+            path="profile"
+            element={
+              <RequireAuth>
+                <MyProfile />
+              </RequireAuth>
+            }
+          />
           <Route
             path="requests"
             element={

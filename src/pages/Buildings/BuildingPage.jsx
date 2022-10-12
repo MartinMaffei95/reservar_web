@@ -188,6 +188,27 @@ const BuildingPage = () => {
             </AccordionDetails>
           ))}
         </Accordion>
+        <Button
+          onClick={() => {
+            deleteAction(localStorage.getItem('userID'), {
+              buildingId: buildingId,
+            });
+          }}
+          variant="outlined"
+          startIcon={<MdOutlinePersonAddAlt />}
+          sx={{
+            backgroundColor: 'error.main',
+            borderColor: 'error.main',
+            color: '#fff',
+            '&:hover': {
+              backgroundColor: 'error.main',
+              borderColor: 'error.main',
+              color: '#000',
+            },
+          }}
+        >
+          ABANDONAR
+        </Button>
       </Grid>
     </div>
   );

@@ -28,7 +28,11 @@ export default function DrawerMenu({ toggleDrawer, state }) {
               redirect={'/bookings/create'}
             ></ListComp>
             <Divider />
-            <ListComp text="Mi usuario" iconElement={<BiUserCircle />} />
+            <ListComp
+              text="Mi usuario"
+              iconElement={<BiUserCircle />}
+              redirect={'/user/profile'}
+            />
             <ListComp
               text="Mis reservas"
               iconElement={<BsCalendarCheck />}

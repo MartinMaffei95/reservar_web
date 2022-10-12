@@ -62,6 +62,16 @@ export const backButtonStyle = {
   left: ' 2vw',
 };
 
+export const profileInformationStyle = {
+  marginBlock: '1rem .5rem',
+  padding: '1rem .5rem ',
+  minWidth: '80vw',
+  maxWidth: '95vw',
+  minHeight: '3rem',
+  display: 'flex',
+  flexDirection: 'column',
+};
+
 const nightColor = '#102040';
 
 export const calendarDayStyle_night = {
