@@ -8,7 +8,9 @@ import {
   Toolbar,
   AppBar,
   IconButton,
+  Badge,
 } from '@mui/material';
+import { MdMeetingRoom } from 'react-icons/md';
 import DrawerMenu from './DrawerMenu';
 import { useState } from 'react';
 import BackButton from '../molecules/BackButton';
@@ -59,6 +61,12 @@ const Header = ({ title, backButton, children }) => {
             {title}
           </Typography>
           <div>
+            {/* ICON FOR NOTIFICATION */}
+            {/* <IconButton aria-label="notifications">
+              <Badge badgeContent={4} color="secondary">
+                <MdMeetingRoom color="#fff" />
+              </Badge>
+            </IconButton> */}
             <IconButton
               size="large"
               aria-label="account of current user"

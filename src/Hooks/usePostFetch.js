@@ -21,6 +21,7 @@ const usePostFetch = (endpoint, bodyData) => {
       .then((data) => {
         setLoading(false);
         setData(data);
+        console.log(data);
       })
       .catch((err) => {
         setLoading(false);

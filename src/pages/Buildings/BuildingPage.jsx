@@ -28,6 +28,7 @@ import {
 } from 'react-icons/md';
 import { accordionSummaryStyle, titleStyle } from '../../muiStyles';
 import useDeleteFetch from '../../Hooks/useDeleteFetch';
+import BookingRequest from '../../Components/BookingRequestCard';
 
 const BuildingPage = () => {
   let { buildingId } = useParams();
@@ -59,6 +60,7 @@ const BuildingPage = () => {
 
   useEffect(() => {
     setBuilding(data?.building);
+    console.log(data?.building);
   }, [loading, deleteHook?.loading]);
 
   const accordeonStyle = {
@@ -66,7 +68,7 @@ const BuildingPage = () => {
     marginBlock: '.5rem',
   };
 
-  const VerifiedButton = ({ children }) => {
+  const VerifiedModule = ({ children }) => {
     if (
       building?.admin?.find((admin) =>
         admin?.username?.includes(localStorage.getItem('username'))
@@ -92,7 +94,7 @@ const BuildingPage = () => {
         <Accordion sx={accordeonStyle} elevation={4}>
           <AccordionSummary expandIcon={'▼'} sx={accordionSummaryStyle}>
             <Typography>ADMINISTRADORES:</Typography>
-            <VerifiedButton>
+            <VerifiedModule>
               <Button
                 onClick={() => {
                   navigate(`admin`);
@@ -102,7 +104,7 @@ const BuildingPage = () => {
               >
                 add
               </Button>
-            </VerifiedButton>
+            </VerifiedModule>
           </AccordionSummary>
           {building?.admin?.map((a) => (
             <AccordionDetails>
@@ -114,7 +116,7 @@ const BuildingPage = () => {
         <Accordion sx={accordeonStyle} elevation={4}>
           <AccordionSummary expandIcon={'▼'} sx={accordionSummaryStyle}>
             <Typography>SALAS CREADAS:</Typography>
-            <VerifiedButton>
+            <VerifiedModule>
               <Button
                 onClick={() => {
                   navigate(`create`);
@@ -124,7 +126,7 @@ const BuildingPage = () => {
               >
                 add
               </Button>
-            </VerifiedButton>
+            </VerifiedModule>
           </AccordionSummary>
           {building?.spaces?.length > 0 ? (
             building?.spaces?.map((s) => (
@@ -147,7 +149,7 @@ const BuildingPage = () => {
         <Accordion sx={accordeonStyle} elevation={4}>
           <AccordionSummary expandIcon={'▼'} sx={accordionSummaryStyle}>
             <Typography>INQUILINOS:</Typography>
-            <VerifiedButton>
+            <VerifiedModule>
               <Button
                 onClick={() => {
                   navigate(`tenants`);
@@ -157,14 +159,14 @@ const BuildingPage = () => {
               >
                 add
               </Button>
-            </VerifiedButton>
+            </VerifiedModule>
           </AccordionSummary>
           {building?.tenants?.map((s) => (
             <AccordionDetails
               sx={{ display: 'flex', justifyContent: 'space-between' }}
             >
               <Typography>{s.username}</Typography>
-              <VerifiedButton>
+              <VerifiedModule>
                 <Button
                   onClick={() => {
                     deleteAction(s._id, { buildingId: buildingId });
@@ -184,10 +186,34 @@ const BuildingPage = () => {
                 >
                   eliminar
                 </Button>
-              </VerifiedButton>
+              </VerifiedModule>
             </AccordionDetails>
           ))}
         </Accordion>
+
+        <VerifiedModule>
+          <Accordion sx={accordeonStyle} elevation={4}>
+            <AccordionSummary expandIcon={'▼'} sx={accordionSummaryStyle}>
+              <Typography>RESERVAS SIN CONFIRMAR:</Typography>
+            </AccordionSummary>
+            <AccordionDetails
+            // sx={{ display: 'flex', justifyContent: 'space-between' }}
+            >
+              {building?.spaces?.map((s) =>
+                s?.standByBookings?.map((req) => (
+                  <BookingRequest
+                    buildingName={req?.building?.name}
+                    spaceName={req?.space?.name}
+                    space_id={req?.space?._id}
+                    date={req?.date}
+                    time={req?.time}
+                    booking_id={req?._id}
+                  />
+                ))
+              )}
+            </AccordionDetails>
+          </Accordion>
+        </VerifiedModule>
         <Button
           onClick={() => {
             deleteAction(localStorage.getItem('userID'), {

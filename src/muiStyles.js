@@ -53,7 +53,7 @@ export const cardContent = {
 export const inviteRequestCard = {
   display: 'flex',
   justifyContent: 'space-between',
-  minWidth: '90vw',
+  // minWidth: '90vw',
   maxWidth: '95vw',
 };
 

@@ -73,7 +73,7 @@ const CreateBookings = () => {
   useEffect(() => {
     if (postHook?.data?.message === 'BOOKING_CREATED') {
       alert('creada');
-      return navigate(-1);
+      return navigate('/bookings', { replace: true });
     }
   }, [postHook?.loading]);
 

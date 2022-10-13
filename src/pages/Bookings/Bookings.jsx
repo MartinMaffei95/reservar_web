@@ -59,6 +59,17 @@ const Bookings = () => {
         justifyContent="center"
         alignItems="center"
       >
+        <Box mt={2} mb={2}>
+          <Button
+            onClick={() => {
+              navigate('/bookings/create');
+            }}
+            variant="outlined"
+            //   startIcon={<HiOutlineOfficeBuilding />}
+          >
+            crear una reserva
+          </Button>
+        </Box>
         {bookings && bookings.length > 0 ? (
           bookings?.map((booking) => (
             <BookingCard

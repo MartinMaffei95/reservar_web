@@ -20,6 +20,7 @@ import CreateSpace from '../pages/Spaces/CreateSpace';
 import Register from '../pages/Register';
 import AddAdminPage from '../pages/Buildings/AddAdmingPage';
 import MyProfile from '../pages/User/MyProfile';
+import Notifications from '../pages/User/Notifications';
 
 const AppRoutes = () => {
   const RequireAuth = ({ children }) => {
@@ -99,6 +100,14 @@ const AppRoutes = () => {
             element={
               <RequireAuth>
                 <CommonArea />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path=":buildingId/notifications"
+            element={
+              <RequireAuth>
+                <Notifications />
               </RequireAuth>
             }
           />
