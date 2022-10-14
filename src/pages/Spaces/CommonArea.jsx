@@ -6,33 +6,22 @@ import FieldDatePicker from '../../molecules/FieldDatePicker';
 import useSwitchBookings from '../../Hooks/useSwitchBookings';
 import { AiFillQuestionCircle } from 'react-icons/ai';
 
-import {
-  Box,
-  Button,
-  Typography,
-  Tooltip,
-  Icon,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-} from '@mui/material/';
+import { Box, Button, Typography, Tooltip, Icon } from '@mui/material/';
 
 import moment from 'moment';
-import BookingCreated from '../../Components/BookingCreated';
 import { accordionSummaryStyle } from '../../muiStyles';
+import { useDispatch, useSelector } from 'react-redux';
+import ReservationsAccordeon from '../../Components/ReservationsAccordeon';
+import { getBookingsOfSpace } from '../../Redux/actions/buildingsActions';
 
 const CommonArea = () => {
   let { spaceId } = useParams();
   const navigate = useNavigate();
   const { data, loading, error } = useFetch(`bookings/?spaceId=${spaceId}`);
-
-  const [bookings, setBookings] = useState();
+  const dispatch = useDispatch();
+  dispatch(getBookingsOfSpace(spaceId));
 
   // MY BOOKINGS -use this for set object "bookings" and send to calendarPicker
-
-  useEffect(() => {
-    setBookings(data?.bookings);
-  }, [loading]);
 
   const helpText = (
     <>
@@ -58,28 +47,8 @@ const CommonArea = () => {
         </Tooltip>
       </Box>
 
-      <FieldDatePicker onlyCalendar bookings={bookings} />
-
-      {bookings && (
-        <Accordion elevation={4}>
-          <AccordionSummary
-            expandIcon={'▼'}
-            sx={(accordionSummaryStyle, { flexDirection: 'row' })}
-          >
-            <Typography>Reservas</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            {bookings.map((res) => (
-              <BookingCreated
-                date={res?.date}
-                time={res?.time}
-                bookedBy={res?.bookedBy?.username}
-              />
-            ))}
-          </AccordionDetails>
-        </Accordion>
-      )}
-
+      <FieldDatePicker onlyCalendar />
+      <ReservationsAccordeon />
       <Box mt={2} mb={2}>
         <Button
           onClick={() => {

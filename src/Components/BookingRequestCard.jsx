@@ -11,21 +11,29 @@ import {
 import { buildingCard, cardContent, inviteRequestCard } from '../muiStyles';
 import { MdCheck, MdClose } from 'react-icons/md';
 import usePostFetch from '../Hooks/usePostFetch';
-
+import moment from 'moment';
+import { postAction } from '../services/axiosActions';
+import { useSelector, useDispatch } from 'react-redux';
+import { aceptBooking, denyBooking } from '../Redux/actions/buildingsActions';
 const BookingRequest = ({
   buildingName,
+  building_id,
   spaceName,
   space_id,
   booking_id,
   date,
   time,
 }) => {
-  const { data, loading, error, fetchPostData } = usePostFetch();
+  const dispatch = useDispatch();
+
+  console.log(booking_id);
   const aceptRequest = () => {
-    fetchPostData(`spaces/${space_id}/acept`, { booking_id: booking_id });
+    const body = { booking_id: booking_id };
+    dispatch(aceptBooking(space_id, body, building_id));
   };
   const denyRequest = () => {
-    fetchPostData(`spaces/${space_id}/deny`, { booking_id: booking_id });
+    const body = { booking_id: booking_id };
+    dispatch(denyBooking(space_id, body, building_id));
   };
 
   return (
@@ -34,7 +42,7 @@ const BookingRequest = ({
         <Typography>{buildingName}</Typography>
         <Typography>{spaceName}</Typography>
         <Box sx={{ display: 'flex' }}>
-          <Typography>{date}</Typography>
+          <Typography>{moment(date).format('MM/DD/YY')} - </Typography>
           <Divider orientation="vertical" flexItem light />
           <Typography>{time}</Typography>
         </Box>

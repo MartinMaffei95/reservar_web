@@ -7,7 +7,12 @@ import {
   CardActions,
   ButtonGroup,
 } from '@mui/material/';
-import { buildingCard, cardContent, inviteRequestCard } from '../muiStyles';
+import {
+  buildingCard,
+  cardContent,
+  inviteBuildingCard,
+  inviteRequestCard,
+} from '../muiStyles';
 import { MdCheck, MdClose } from 'react-icons/md';
 import usePostFetch from '../Hooks/usePostFetch';
 
@@ -26,7 +31,7 @@ const CardInviteRequest = ({
   };
 
   return (
-    <Card sx={inviteRequestCard}>
+    <Card sx={inviteBuildingCard}>
       <CardContent>
         <Typography>{name}</Typography>
       </CardContent>

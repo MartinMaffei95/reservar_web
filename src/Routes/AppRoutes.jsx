@@ -21,9 +21,17 @@ import Register from '../pages/Register';
 import AddAdminPage from '../pages/Buildings/AddAdmingPage';
 import MyProfile from '../pages/User/MyProfile';
 import Notifications from '../pages/User/Notifications';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { getMyProfileData } from '../Redux/actions/userActions';
 const AppRoutes = () => {
   const RequireAuth = ({ children }) => {
+    const dispatch = useDispatch();
+    dispatch(
+      getMyProfileData(
+        localStorage.getItem('userID'),
+        localStorage.getItem('token')
+      )
+    );
     if (!localStorage.getItem('token')) {
       return <Navigate to="/login" replace={true} />;
     }

@@ -6,10 +6,13 @@ import { useFormik } from 'formik';
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { initialFormStyle } from '../muiStyles';
+import { postAction } from '../services/axiosActions';
+import { useSelector, useDispatch } from 'react-redux';
+import { loading, getMyProfileData } from '../Redux/actions/userActions';
 
 const Login = () => {
-  const { data, loading, error, fetchPostData } = usePostFetch();
   let navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const initialValues = {
     username: localStorage.getItem('username') || '',
@@ -20,8 +23,24 @@ const Login = () => {
     if (e.key === 'Enter') e.preventDefault();
   };
 
-  const onSubmit = () => {
-    fetchPostData('auth/login', values);
+  const onSubmit = async () => {
+    dispatch(loading(true));
+    try {
+      const user = await postAction('auth/login', values);
+      dispatch(loading(false));
+
+      if (user.message === 'LOGIN_SUCCESS') {
+        localStorage.setItem('token', user?.token);
+        localStorage.setItem('username', user?.user?.username);
+        localStorage.setItem('userID', user?.user?._id);
+        if (user?.user?.buildings?.length > 0)
+          return navigate('/bookings/create', { replace: true });
+        else return navigate('/buildings/create', { replace: true });
+      }
+    } catch (e) {
+      alert('error');
+      dispatch(loading(false));
+    }
   };
 
   const errorMessages = {
@@ -48,19 +67,6 @@ const Login = () => {
     handleBlur,
     setFieldValue,
   } = formik;
-
-  useEffect(() => {
-    if (data.message === 'LOGIN_SUCCESS') {
-      localStorage.setItem('token', data?.token);
-      localStorage.setItem('username', data?.user?.username);
-      localStorage.setItem('userID', data?.user?._id);
-
-      if (data?.user?.buildings?.length > 0)
-        return navigate('/bookings/create', { replace: true });
-      else return navigate('/buildings/create', { replace: true });
-    }
-    //ToDo: create error messages
-  }, [loading]);
 
   return (
     <>

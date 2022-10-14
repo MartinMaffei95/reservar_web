@@ -14,10 +14,12 @@ import { MdMeetingRoom } from 'react-icons/md';
 import DrawerMenu from './DrawerMenu';
 import { useState } from 'react';
 import BackButton from '../molecules/BackButton';
-
+import { useSelector } from 'react-redux';
+import NotificationIcon from './NotificationIcon';
 const Header = ({ title, backButton, children }) => {
   // Recives in the children button to post a Post or Comment
   const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -62,11 +64,8 @@ const Header = ({ title, backButton, children }) => {
           </Typography>
           <div>
             {/* ICON FOR NOTIFICATION */}
-            {/* <IconButton aria-label="notifications">
-              <Badge badgeContent={4} color="secondary">
-                <MdMeetingRoom color="#fff" />
-              </Badge>
-            </IconButton> */}
+            <NotificationIcon />
+
             <IconButton
               size="large"
               aria-label="account of current user"

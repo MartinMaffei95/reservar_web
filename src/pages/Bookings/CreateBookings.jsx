@@ -18,6 +18,8 @@ import FieldDatePicker from '../../molecules/FieldDatePicker';
 import moment from 'moment';
 import usePostFetch from '../../Hooks/usePostFetch';
 import { useNavigate } from 'react-router-dom';
+
+import { createBooking } from '../../services/axiosActions';
 const CreateBookings = () => {
   const initialValues = {
     building_name: '',
@@ -27,14 +29,21 @@ const CreateBookings = () => {
   };
   const navigate = useNavigate();
   const postHook = usePostFetch();
-  const onSubmit = () => {
+
+  const onSubmit = async () => {
     let bodyObject = {
       date: moment(values.date).format('MM DD YY'),
       time: values.time,
       building: values.building_name,
       space: values.space_name,
     };
-    postHook.fetchPostData('bookings', bodyObject);
+
+    try {
+      const newBooking = await createBooking('bookings', bodyObject);
+      console.log(newBooking);
+    } catch (error) {
+      alert(error.response.data.message);
+    }
   };
 
   const errorMessages = {

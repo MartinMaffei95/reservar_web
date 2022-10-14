@@ -17,6 +17,7 @@ import {
   calendarDayStyle_morning,
   calendarDayStyle_night,
 } from '../muiStyles';
+import { useSelector } from 'react-redux';
 
 const renderizeDays = (bookings) => (day, selectedDays, pickersDayProps) => {
   let selectedMuiClass = { background: 'red' };
@@ -53,9 +54,10 @@ const FieldDatePicker = ({
   isPhone,
   action,
   onlyCalendar = false,
-  bookings,
   disabled,
 }) => {
+  const bookings = useSelector((state) => state.buildingsReducer.bookings);
+
   const [dateState, setDateState] = useState(action?.values?.date || moment());
   const [renderBookings, setRenderBookings] = useState({});
   const { morningBookings, afternonBookings, nightBookings, loadingBookings } =

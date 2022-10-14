@@ -1,3 +1,33 @@
+export const notificationsMenuStyle = {
+  filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+  mt: 1.5,
+  maxHeight: 60 * 5,
+  '& .MuiMenuItem-root': {
+    height: 60,
+    minWidth: '30vw',
+    display: 'flex',
+    alignItems: 'stretch',
+    whiteSpace: 'normal',
+    paddingInline: '.5rem',
+  },
+  '& .MuiTypography-root': {
+    fontSize: '0.9rem',
+  },
+
+  // '&:before': {
+  //   content: '""',
+  //   display: 'block',
+  //   position: 'absolute',
+  //   top: 0,
+  //   right: 14,
+  //   width: 10,
+  //   height: 10,
+  //   bgcolor: 'background.paper',
+  //   transform: 'translateY(-50%) rotate(45deg)',
+  //   zIndex: 0,
+  // },
+};
+
 export const initialFormStyle = {
   margin: '1em',
   width: '80vw',
@@ -26,6 +56,11 @@ export const findeItems = {
   alignItems: 'center',
 };
 
+export const accordeonStyle = {
+  width: '90vw',
+  marginBlock: '.5rem',
+};
+
 export const accordionSummaryStyle = {
   display: 'flex',
   flexDirection: 'row-reverse',
@@ -48,6 +83,13 @@ export const cardContent = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
+};
+
+export const inviteBuildingCard = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  minWidth: '90vw',
+  maxWidth: '95vw',
 };
 
 export const inviteRequestCard = {

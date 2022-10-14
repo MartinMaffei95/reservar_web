@@ -37,7 +37,6 @@ const useSwitchBookings = (objBookings) => {
   useEffect(() => {
     switchBookings(objBookings);
   }, [objBookings]);
-
   return { morningBookings, afternonBookings, nightBookings, loadingBookings };
 };
 

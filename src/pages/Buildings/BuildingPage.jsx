@@ -14,10 +14,7 @@ import {
   AccordionDetails,
   Paper,
 } from '@mui/material/';
-import useFetch from '../../Hooks/useFetch';
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
 import moment from 'moment';
 
 import {
@@ -26,22 +23,24 @@ import {
   MdOutlineNoMeetingRoom,
   MdOutlineRoomPreferences,
 } from 'react-icons/md';
-import { accordionSummaryStyle, titleStyle } from '../../muiStyles';
-import useDeleteFetch from '../../Hooks/useDeleteFetch';
-import BookingRequest from '../../Components/BookingRequestCard';
+import {
+  accordeonStyle,
+  accordionSummaryStyle,
+  titleStyle,
+} from '../../muiStyles';
+import { useSelector, useDispatch } from 'react-redux';
+import { removeTenant } from '../../Redux/actions/buildingsActions';
+import { useBuildings } from '../../Hooks/useBuildings';
+import { BookingsAccordion } from './BookingsAccordion';
 
 const BuildingPage = () => {
   let { buildingId } = useParams();
   const navigate = useNavigate();
-  const [building, setBuilding] = useState();
-  const { data, loading, error, fetchGetData } = useFetch(
-    `buildings/${buildingId}`
+  useBuildings(buildingId);
+  const dispatch = useDispatch();
+  const building = useSelector(
+    (state) => state.buildingsReducer.buildingFetchedData
   );
-
-  const deleteHook = useDeleteFetch();
-  const deleteAction = async (userId, bodyData) => {
-    deleteHook.fetchDeleteData(`users/removeTenant/${userId}`, bodyData);
-  };
 
   const isReserved = (bookings) => {
     for (let i = 0; i < bookings.length; i++) {
@@ -49,23 +48,6 @@ const BuildingPage = () => {
         return true;
       }
     }
-  };
-
-  useEffect(() => {
-    if (deleteHook.data.message === 'REMOVED_USER_FROM_BUILDING') {
-      alert('Eliminado');
-      fetchGetData(`buildings/${buildingId}`);
-    }
-  }, [deleteHook?.loading]);
-
-  useEffect(() => {
-    setBuilding(data?.building);
-    console.log(data?.building);
-  }, [loading, deleteHook?.loading]);
-
-  const accordeonStyle = {
-    width: '90vw',
-    marginBlock: '.5rem',
   };
 
   const VerifiedModule = ({ children }) => {
@@ -78,6 +60,7 @@ const BuildingPage = () => {
     }
     return;
   };
+
   return (
     <div>
       <Header backButton title={'Informacion del edificio'} />
@@ -107,7 +90,7 @@ const BuildingPage = () => {
             </VerifiedModule>
           </AccordionSummary>
           {building?.admin?.map((a) => (
-            <AccordionDetails>
+            <AccordionDetails key={a._id}>
               <Typography>{a.username}</Typography>
             </AccordionDetails>
           ))}
@@ -131,6 +114,7 @@ const BuildingPage = () => {
           {building?.spaces?.length > 0 ? (
             building?.spaces?.map((s) => (
               <AccordionDetails
+                key={s._id}
                 sx={{ display: 'flex', justifyContent: 'space-between' }}
               >
                 <Typography>
@@ -163,13 +147,20 @@ const BuildingPage = () => {
           </AccordionSummary>
           {building?.tenants?.map((s) => (
             <AccordionDetails
+              key={s._id}
               sx={{ display: 'flex', justifyContent: 'space-between' }}
             >
               <Typography>{s.username}</Typography>
               <VerifiedModule>
                 <Button
                   onClick={() => {
-                    deleteAction(s._id, { buildingId: buildingId });
+                    dispatch(
+                      removeTenant(
+                        s._id,
+                        { buildingId: buildingId },
+                        buildingId
+                      )
+                    );
                   }}
                   variant="outlined"
                   startIcon={<MdOutlinePersonAddAlt />}
@@ -196,27 +187,14 @@ const BuildingPage = () => {
             <AccordionSummary expandIcon={'▼'} sx={accordionSummaryStyle}>
               <Typography>RESERVAS SIN CONFIRMAR:</Typography>
             </AccordionSummary>
-            <AccordionDetails
-            // sx={{ display: 'flex', justifyContent: 'space-between' }}
-            >
-              {building?.spaces?.map((s) =>
-                s?.standByBookings?.map((req) => (
-                  <BookingRequest
-                    buildingName={req?.building?.name}
-                    spaceName={req?.space?.name}
-                    space_id={req?.space?._id}
-                    date={req?.date}
-                    time={req?.time}
-                    booking_id={req?._id}
-                  />
-                ))
-              )}
+            <AccordionDetails>
+              <BookingsAccordion />
             </AccordionDetails>
           </Accordion>
         </VerifiedModule>
         <Button
           onClick={() => {
-            deleteAction(localStorage.getItem('userID'), {
+            removeTenant(localStorage.getItem('userID'), {
               buildingId: buildingId,
             });
           }}

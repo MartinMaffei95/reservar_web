@@ -20,7 +20,14 @@ import { TbCalendarStats } from 'react-icons/tb';
 import moment from 'moment';
 import { buildingCard, titleStyle } from '../../muiStyles';
 
-const BookingCard = ({ buildingName, spaces, date, time, redirect }) => (
+const BookingCard = ({
+  buildingName,
+  spaces,
+  date,
+  time,
+  redirect,
+  confirmed,
+}) => (
   <Card variant="outlined" sx={buildingCard}>
     <CardContent>
       <Typography>
@@ -31,6 +38,9 @@ const BookingCard = ({ buildingName, spaces, date, time, redirect }) => (
       </Typography>
       <Typography sx={{ mb: 1.5 }} color="text.secondary">
         {spaces}
+      </Typography>
+      <Typography sx={{ mb: 1.5 }} color="text.secondary">
+        {confirmed === true ? 'CONFIRMADA' : 'ESPERANDO CONFIRMACIÓN'}
       </Typography>
     </CardContent>
     <CardActions>
@@ -47,7 +57,6 @@ const Bookings = () => {
   const navigate = useNavigate();
   useEffect(() => {
     setBookings(data?.booking);
-    console.log(data?.booking);
   }, [loading]);
 
   return (
@@ -78,6 +87,7 @@ const Bookings = () => {
               spaces={booking?.space?.name}
               date={moment(booking?.date).format('MM/DD/YY')}
               time={booking?.time}
+              confirmed={booking?.reservationAccepted}
               redirect={() => {
                 navigate(
                   `/buildings/${booking?.building?._id}/${booking?.space?._id}`

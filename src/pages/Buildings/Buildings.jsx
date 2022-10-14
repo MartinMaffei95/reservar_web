@@ -21,7 +21,6 @@ const Buildings = () => {
 
   useEffect(() => {
     setBuildings(data?.building);
-    console.log(buildings);
   }, [loading]);
 
   const BuildingCard = ({
