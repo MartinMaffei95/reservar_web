@@ -13,6 +13,7 @@ import { accordionSummaryStyle } from '../../muiStyles';
 import { useDispatch, useSelector } from 'react-redux';
 import ReservationsAccordeon from '../../Components/ReservationsAccordeon';
 import { getBookingsOfSpace } from '../../Redux/actions/buildingsActions';
+import { helpText } from '../../tootipsTexts';
 
 const CommonArea = () => {
   let { spaceId } = useParams();
@@ -22,18 +23,6 @@ const CommonArea = () => {
   dispatch(getBookingsOfSpace(spaceId));
 
   // MY BOOKINGS -use this for set object "bookings" and send to calendarPicker
-
-  const helpText = (
-    <>
-      <div>
-        Estos son las reservas activas para este mes. Cada circulo representa
-        una reserva en la franja activa:
-      </div>
-      <div>Color1: Mañana (08 a 15)</div>
-      <div>Color2: Tarde (15 a 19)</div>
-      <div>Color3: Noche (21 a 06)</div>
-    </>
-  );
 
   return (
     <div>

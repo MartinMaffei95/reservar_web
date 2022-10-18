@@ -22,10 +22,17 @@ import { MdPassword } from 'react-icons/md';
 //FORMIK
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import { profileEditStyle } from '../muiStyles';
+
+//SWAL
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 const EditInformationPanel = ({ profileData }) => {
   const [profile, setProfile] = useState(profileData);
   const putFetchHook = usePutFetch();
+
+  const MySwal = withReactContent(Swal);
 
   //
   //  FORMIK
@@ -54,12 +61,11 @@ const EditInformationPanel = ({ profileData }) => {
         },
       },
     };
+
     putFetchHook.fetchPutData(
       `users/${localStorage.getItem('userID')}`,
       updateUserBody
     );
-
-    console.log(updateUserBody);
   };
 
   const errorMessages = {
@@ -107,7 +113,7 @@ const EditInformationPanel = ({ profileData }) => {
     if (putFetchHook.data.message === 'PROFILE_MODIFIED') {
       localStorage.setItem('token', putFetchHook?.data?.token);
       localStorage.setItem('username', putFetchHook?.data?.user?.username);
-      alert('actualizado vro');
+      alert('actualizado vro-- aGRGAR TOAST');
     }
   }, [putFetchHook.loading]);
 
@@ -137,19 +143,19 @@ const EditInformationPanel = ({ profileData }) => {
   return (
     <Box
       component="form"
+      id="form_editProfile"
       onSubmit={handleSubmit}
       noValidate
       autoComplete="off"
       sx={{
         display: 'flex',
         flexDirection: 'column',
+        gap: '1em',
+        maxWidth: '90vw',
+        padding: '.5em',
       }}
     >
-      <Button type="submit" fullWidth variant="contained" disableElevation>
-        Ingresar
-      </Button>
-
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Box component="div" sx={profileEditStyle}>
         <Box component="div" sx={{ display: 'flex' }}>
           <TextField
             id="outlined-required"
@@ -164,9 +170,10 @@ const EditInformationPanel = ({ profileData }) => {
         </Box>
       </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Box component="div" sx={{ display: 'flex' }}>
+      <Box component="div" sx={profileEditStyle}>
+        <Box component="div">
           <TextField
+            sx={{ width: '100%' }}
             id="outlined-required"
             label="Nombre"
             placeholder="Nombre"
@@ -177,7 +184,11 @@ const EditInformationPanel = ({ profileData }) => {
             onKeyDown={keyAction}
           />
         </Box>
-        <ButtonGroup variant="text" aria-label="text button group">
+        <ButtonGroup
+          // sx={{ flexGrow: '1' }}
+          variant="text"
+          aria-label="text button group"
+        >
           <ToogleButton
             value={values?.nameVisualization}
             fieldName={'nameVisualization'}
@@ -187,8 +198,8 @@ const EditInformationPanel = ({ profileData }) => {
         </ButtonGroup>
       </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Box component="div" sx={{ display: 'flex' }}>
+      <Box component="div" sx={profileEditStyle}>
+        <Box component="div">
           <TextField
             id="outlined-required"
             label="Apellido"
@@ -210,11 +221,8 @@ const EditInformationPanel = ({ profileData }) => {
         </ButtonGroup>
       </Box>
 
-      <Box
-        component="div"
-        sx={{ display: 'flex', justifyContent: 'space-between' }}
-      >
-        <Box component="div" sx={{ display: 'flex' }}>
+      <Box component="div" sx={profileEditStyle}>
+        <Box component="div">
           <TextField
             id="outlined-required"
             label="Direccion de mail"

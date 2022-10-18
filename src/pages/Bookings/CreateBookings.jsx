@@ -20,6 +20,20 @@ import usePostFetch from '../../Hooks/usePostFetch';
 import { useNavigate } from 'react-router-dom';
 
 import { createBooking } from '../../services/axiosActions';
+
+//SWAL
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import { useDispatch } from 'react-redux';
+import {
+  getBookingsOfSpace,
+  makeToast,
+} from '../../Redux/actions/buildingsActions';
+import useTranslate from '../../Hooks/useTranslate';
+import translate from '../../functions/translate';
+import { useResize } from '../../Hooks/useResize';
+import Bookings from './Bookings';
+
 const CreateBookings = () => {
   const initialValues = {
     building_name: '',
@@ -29,7 +43,9 @@ const CreateBookings = () => {
   };
   const navigate = useNavigate();
   const postHook = usePostFetch();
+  const dispatch = useDispatch();
 
+  const MySwal = withReactContent(Swal);
   const onSubmit = async () => {
     let bodyObject = {
       date: moment(values.date).format('MM DD YY'),
@@ -40,9 +56,32 @@ const CreateBookings = () => {
 
     try {
       const newBooking = await createBooking('bookings', bodyObject);
-      console.log(newBooking);
-    } catch (error) {
-      alert(error.response.data.message);
+      dispatch(
+        makeToast(
+          'success',
+          'Tu reserva fue creada. Un adminstrador deberá confirmarla'
+        )
+      );
+    } catch (e) {
+      const { message } = e?.response?.data;
+      console.log(message);
+      switch (message) {
+        case 'HAVE_ANOTHER_RESERVATION':
+          MySwal.fire({
+            title: 'Tenemos otra reserva',
+            text: 'Ya tenemos una reserva en este horario pero puedes intentar otro',
+            icon: 'error',
+            focusConfirm: true,
+            confirmButtonText: 'Reintentar',
+            background: '#fff',
+            customClass: {
+              actions: 'test',
+              confirmButton: 'btn primary',
+            },
+            buttonsStyling: false,
+          });
+          break;
+      }
     }
   };
 
@@ -75,6 +114,8 @@ const CreateBookings = () => {
   const [renderBookings, setRenderBookings] = useState({});
   const [disabled, setDisabled] = useState(true);
 
+  const { isPhone } = useResize();
+
   useEffect(() => {
     setBuildings(data?.building);
   }, [loading]);
@@ -87,7 +128,6 @@ const CreateBookings = () => {
   }, [postHook?.loading]);
 
   const sendBookings = () => {
-    console.log(buildings[buildingIndex]?.spaces[spaceIndex]);
     setRenderBookings(buildings[buildingIndex]?.spaces[spaceIndex]?.bookings);
   };
 
@@ -103,94 +143,111 @@ const CreateBookings = () => {
   return (
     <div>
       <Header backButton title={'Creando reserva'} />
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        mt={5}
-        mb={5}
-        sx={{
-          maxWidth: '90%',
-          minWidth: '80%',
-          marginInline: 'auto',
-          gap: '1rem',
-        }}
-      >
-        <FormControl variant="filled">
-          <InputLabel>Edificio:</InputLabel>
-          <Select
-            name={'building_name'}
-            error={errors.building_name && touched.building_name}
-            value={values.building_name}
-            onChange={handleChange}
-          >
-            {buildings &&
-              buildings.map((buil, i) => (
-                <MenuItem
-                  onClick={() => {
-                    setFieldValue('space_name', '');
-                    setBuildingIndex(i);
-                  }}
-                  key={buil?._id}
-                  value={buil?._id}
-                >
-                  {buil?.name}
-                </MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-        <FormControl variant="filled">
-          <InputLabel>Zona común:</InputLabel>
-          <Select
-            name={'space_name'}
-            error={errors.space_name && touched.space_name}
-            value={values.space_name}
-            onChange={handleChange}
-            disabled={buildings && !buildings[buildingIndex]?.spaces?.length}
-          >
-            {buildings &&
-              buildings[buildingIndex]?.spaces?.map((buil, i) => (
-                <MenuItem
-                  onClick={() => {
-                    setSpaceIndex(i);
-                  }}
-                  key={buil?._id}
-                  value={buil?._id}
-                >
-                  {buil?.name}
-                </MenuItem>
-              ))}
-          </Select>
-        </FormControl>
+      <Grid container direction="row" justifyContent="space-around">
+        <Grid
+          container
+          direction="column"
+          justifyContent="center"
+          mt={5}
+          mb={5}
+          sx={
+            isPhone
+              ? {
+                  maxWidth: '90%',
+                  minWidth: '80%',
+                  marginInline: 'auto',
+                  gap: '1rem',
+                }
+              : {
+                  maxWidth: '70vw',
+                  minWidth: '60vw',
+                  gap: '1rem',
+                }
+          }
+        >
+          <FormControl variant="filled">
+            <InputLabel>Edificio:</InputLabel>
+            <Select
+              name={'building_name'}
+              error={errors.building_name && touched.building_name}
+              value={values.building_name}
+              onChange={handleChange}
+            >
+              {buildings &&
+                buildings.map((buil, i) => (
+                  <MenuItem
+                    onClick={() => {
+                      setFieldValue('space_name', '');
+                      setBuildingIndex(i);
+                      setSpaceIndex(0);
+                    }}
+                    key={buil?._id}
+                    value={buil?._id}
+                  >
+                    {buil?.name}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+          <FormControl variant="filled">
+            <InputLabel>Zona común:</InputLabel>
+            <Select
+              name={'space_name'}
+              error={errors.space_name && touched.space_name}
+              value={values.space_name}
+              onChange={handleChange}
+              disabled={buildings && !buildings[buildingIndex]?.spaces?.length}
+            >
+              {buildings &&
+                buildings[buildingIndex]?.spaces?.map((space, i) => (
+                  <MenuItem
+                    onClick={() => {
+                      setSpaceIndex(i);
+                      // console.log(space?._id);
+                      dispatch(getBookingsOfSpace(space?._id));
+                    }}
+                    key={space?._id}
+                    value={space?._id}
+                  >
+                    {space?.name}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
 
-        <FieldDatePicker
-          isPhone
-          action={formik}
-          values={values?.date}
-          bookings={renderBookings}
-          disabled={disabled}
-        />
+          <FieldDatePicker
+            isPhone
+            action={formik}
+            values={values?.date}
+            fromProps
+            bookings={renderBookings}
+            disabled={disabled}
+          />
 
-        <FormControl variant="filled">
-          <InputLabel>Franja horaria:</InputLabel>
-          <Select
-            name={'time'}
-            error={errors.time && touched.time}
-            value={values.time}
-            onChange={handleChange}
-            disabled={buildings && !buildings[buildingIndex]?.spaces?.length}
-          >
-            {buildings &&
-              ['MORNING', 'AFTERNOON', 'NIGHT'].map((time) => (
-                <MenuItem key={time} value={time}>
-                  {time}
-                </MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-        <Button variant="outlined" onClick={handleSubmit}>
-          Crear reserva
-        </Button>
+          <FormControl variant="filled">
+            <InputLabel>Franja horaria:</InputLabel>
+            <Select
+              name={'time'}
+              error={errors.time && touched.time}
+              value={values.time}
+              onChange={handleChange}
+              disabled={buildings && !buildings[buildingIndex]?.spaces?.length}
+            >
+              {buildings &&
+                buildings[buildingIndex]?.spaces[
+                  spaceIndex
+                ]?.defaultValuesTimeSlot.map((time) => (
+                  <MenuItem key={time} value={time}>
+                    {translate(time)}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+          <Button variant="outlined" onClick={handleSubmit}>
+            Crear reserva
+          </Button>
+        </Grid>
+        {!isPhone && <Bookings />}
       </Grid>
     </div>
   );

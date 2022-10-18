@@ -13,6 +13,7 @@ const initialStore = {
   buildingFetchedData: {},
   buildingFetched_Bookings: {},
   bookings: [],
+  onWaitBookings: [],
   error: '',
 };
 
@@ -34,7 +35,9 @@ export const buildingsReducer = (state = initialStore, action) => {
       return {
         ...state,
         loading: false,
-        bookings: action.payload,
+        bookings: action.payload.confirmedBookings,
+        onWaitBookings: action.payload.onWaitBookings,
+        buildingFetched_Bookings: action.payload.onWaitBookings,
       };
     case GET_ONWAIT_BOOKINGS: //## APP IS LOADING - THIS ACTION ONLY PUT LOADING TREO OR FALSE
       return {

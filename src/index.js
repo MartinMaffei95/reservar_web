@@ -1,14 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import './Styles/index.css';
+import './Styles/buttons.css';
+
 import reportWebVitals from './reportWebVitals';
 import AppRoutes from './Routes/AppRoutes';
 
 import { Provider } from 'react-redux';
 import store from './Redux/store';
+
+//  NOTIFICATIONS
+// TOAST
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useResize } from './Hooks/useResize';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <ToastContainer />
+
     <Provider store={store}>
       <AppRoutes />
     </Provider>

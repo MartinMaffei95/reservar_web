@@ -1,0 +1,103 @@
+:root {
+  --fontColor: rgb(0, 6, 24);
+
+  /*## SECTION VARIABLES ##*/
+  --postSection: 50vw;
+  --favoriteSection: 30vw;
+  --menuSection: 20vw;
+
+  /*## COLOR VARIABLES ##*/
+  --dominantColor: #6e6c6f;
+  --dominantColorSoft: #c6c3c6;
+  --complementaryColor: #1fadb7;
+  --accentColor: #5481b7;
+  --accentColorDark: #235377;
+  --accentColorTransp: #5481b7b4;
+
+  --likeColorIcon: #ff0936;
+  --likeColor: #d24444cd;
+  --likeColorSoft: #d24444a2;
+
+  --msgColor: #5481b7;
+  --msgColorSoft: #5481b78d;
+  --msgColorIcon: #1e00ff;
+
+  --favoriteColor: #afad1f;
+  --favoriteColorSoft: #e4e12f;
+  --favoriteColorIcon: #e4e12f;
+
+  --shareColor: #66bf56;
+  --shareColorSoft: #63b754ba;
+  --shareColorIcon: #0d5600;
+
+  --shadedBackgroundColor: #00000087;
+
+  /*## MARGIN VARIABLES ##*/
+  --marginInLine: 1rem;
+  --marginBlock: 0.2rem;
+
+  /*## BLOCK SIZES VARIABLES ##*/
+  --headerHeight: 4rem;
+  --footerHeight: 2rem;
+
+  /* -- ##  POST BOX SIZES ##*/
+  --boxPostMinHeight: 6rem;
+  /* --boxPostMinHeight: 6rem; */
+  --boxShadowProp: 0 0 4px 2px var(--dominantColor);
+
+  /* -- ##  BORDER RADIUS  ##*/
+  --borderRadiusCircle: 50%;
+  --borderRadiusCard: 0.5rem;
+
+  /* PROFILE SIZE */
+  --imageWidth: 3rem;
+  --lineCommentsHeight: 0px;
+
+  /*## FONTS VARIABLES ##*/
+  --smallTextSize: 0.8rem;
+  --normalTextSize: 1rem;
+  --bigTextSize: 1.3rem;
+  --biggerTextSize: 1.6rem;
+
+  --InputLabelFontSize: 1.1rem;
+  --InputLabelFontSize_inFocus: 0.9rem;
+  --InputFontSize: 1.3rem;
+
+  --inputMarginInLine: 0.5rem;
+
+  /*## FONTS VARIABLES ##*/
+  --inputHeigt: 4rem;
+  --inputFocusHeigt: 8rem;
+
+  --transitionDuration_General: 0.5s;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.Morning {
+  background-color: red;
+}
+
+.nsLink {
+  text-decoration: none;
+  color: var(--fontColor);
+}

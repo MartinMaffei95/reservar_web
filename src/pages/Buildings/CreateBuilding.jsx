@@ -75,7 +75,7 @@ const CreateBuilding = () => {
           Se reserva por: {resFor === 'PER_DAY' ? 'DIA' : 'FRANJA HORARIA'}{' '}
         </Typography>
         <Typography>
-          Requiere autorizacion?: {reqAuth === true ? 'SI' : 'NO'}
+          Requiere autorizacion?: {reqAuth === 'true' ? 'SI' : 'NO'}
         </Typography>
       </AccordionDetails>
     </Accordion>

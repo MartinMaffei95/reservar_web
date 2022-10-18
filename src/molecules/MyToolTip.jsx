@@ -25,6 +25,7 @@ const MyToolTip = ({ text, icon }) => {
         // disableFocusListener
         // disableHoverListener
         disableTouchListener
+        sx={{ position: 'absolute', left: 'calc(100% - 1.5em)', top: '.5em' }}
       >
         <Icon fontSize="tiny" onClick={handleTooltipOpen}>
           {icon}

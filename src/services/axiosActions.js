@@ -24,28 +24,28 @@ export const getAction = (endpoint) => {
   return request.then((res) => res.data);
 };
 
-export const postAction = (endpoint, newBooking) => {
+export const postAction = (endpoint, body) => {
   const request = axios({
-    method: 'post',
+    method: 'POST',
     url: `${process.env.REACT_APP_URI}/${endpoint}`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
-    data: newBooking,
+    data: body,
   });
   return request.then((res) => res.data);
 };
 
-export const deleteAction = (endpoint, newBooking) => {
+export const deleteAction = (endpoint, body) => {
   const request = axios({
-    method: 'delete',
+    method: 'DELETE',
     url: `${process.env.REACT_APP_URI}/${endpoint}`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
-    data: newBooking,
+    data: body,
   });
   return request.then((res) => res.data);
 };

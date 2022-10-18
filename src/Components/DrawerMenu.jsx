@@ -1,8 +1,6 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import Divider from '@mui/material/Divider';
-
+import { Box, Menu, Drawer, Divider, IconButton } from '@mui/material';
+import { MdMenu, MdOutlineAccountCircle } from 'react-icons/md';
 import ListComp from '../molecules/ListComp';
 import { BiUserCircle } from 'react-icons/bi';
 import { BsBuilding, BsCalendarCheck, BsDoorClosed } from 'react-icons/bs';
@@ -22,17 +20,31 @@ export default function DrawerMenu({ toggleDrawer, state }) {
             // onClick={toggleDrawer(false)}
             onKeyDown={toggleDrawer(false)}
           >
+            <span></span>
+
             <ListComp
-              text="CREAR RESERVA"
+              text={localStorage.getItem('username')}
+              iconElement={
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                >
+                  <MdOutlineAccountCircle />
+                </IconButton>
+              }
+              redirect={'/user/profile'}
+            />
+            <Divider />
+
+            <ListComp
+              text="Reservar"
               iconElement={<MdOutlineAddToPhotos />}
               redirect={'/bookings/create'}
             ></ListComp>
-            <Divider />
-            <ListComp
-              text="Mi usuario"
-              iconElement={<BiUserCircle />}
-              redirect={'/user/profile'}
-            />
+
             <ListComp
               text="Mis reservas"
               iconElement={<BsCalendarCheck />}

@@ -40,46 +40,52 @@ const CreateSpace = () => {
     spaces: [],
   };
 
-  const SpacesCreated = ({ name, resFor, reqAuth }) => (
-    <Accordion elevation={4} sx={cardSpaceStyle}>
-      <AccordionSummary
-        expandIcon={'▼'}
-        sx={{
-          display: 'flex',
-          flexDirection: 'row-reverse',
-          '& .MuiAccordionSummary-content': {
-            justifyContent: 'space-between',
-          },
-          gap: '1rem',
-        }}
-      >
-        <Typography>{name}</Typography>
-        <ButtonGroup variant="text">
-          {/* <Tooltip id={name} title="Edit">
+  const SpacesCreated = ({ name, resFor, reqAuth }) => {
+    console.log(name, resFor, reqAuth);
+    return (
+      <Accordion elevation={4} sx={cardSpaceStyle}>
+        <AccordionSummary
+          expandIcon={'▼'}
+          sx={{
+            display: 'flex',
+            flexDirection: 'row-reverse',
+            '& .MuiAccordionSummary-content': {
+              justifyContent: 'space-between',
+            },
+            gap: '1rem',
+          }}
+        >
+          <Typography>{name}</Typography>
+          <ButtonGroup variant="text">
+            {/* <Tooltip id={name} title="Edit">
             <Button>
               <AiOutlineEdit />
             </Button>
           </Tooltip> */}
-          <Tooltip title="Delete">
-            <Button
-              onClick={removeCardSpace}
-              id={name}
-              sx={{ background: 'lightblue' }}
-            >
-              <AiOutlineDelete onClick={removeCardSpace} id={name} />
-            </Button>
-          </Tooltip>
-        </ButtonGroup>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Typography>Nombre del edificio: {name} </Typography>
-        <Typography>
-          Se reserva por: {resFor === 'PER_DAY' ? 'DIA' : 'FRANJA HORARIA'}{' '}
-        </Typography>
-        <Typography>Requiere autorizacion?: {reqAuth ? 'SI' : 'NO'}</Typography>
-      </AccordionDetails>
-    </Accordion>
-  );
+            <Tooltip title="Delete">
+              <Button
+                onClick={removeCardSpace}
+                id={name}
+                sx={{ background: 'lightblue' }}
+              >
+                <AiOutlineDelete onClick={removeCardSpace} id={name} />
+              </Button>
+            </Tooltip>
+          </ButtonGroup>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>Nombre del edificio: {name} </Typography>
+          <Typography>
+            Se reserva por: {resFor === 'PER_DAY' ? 'DIA' : 'FRANJA HORARIA'}{' '}
+          </Typography>
+          <Typography>
+            Requiere autorizacion?: {reqAuth === 'true' ? 'SI' : 'NO'}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+    );
+  };
+
   const navigate = useNavigate();
   const { data, loading, error, fetchPostData } = usePostFetch();
 

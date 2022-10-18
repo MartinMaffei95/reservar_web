@@ -23,6 +23,10 @@ import MyProfile from '../pages/User/MyProfile';
 import Notifications from '../pages/User/Notifications';
 import { useSelector, useDispatch } from 'react-redux';
 import { getMyProfileData } from '../Redux/actions/userActions';
+
+//  NOTIFICATIONS
+// TOAST
+import { ToastContainer } from 'react-toastify';
 const AppRoutes = () => {
   const RequireAuth = ({ children }) => {
     const dispatch = useDispatch();
@@ -40,6 +44,8 @@ const AppRoutes = () => {
 
   return (
     <BrowserRouter>
+      <ToastContainer />
+
       <Routes>
         {/* HOME ROUTE */}
         <Route
@@ -128,7 +134,7 @@ const AppRoutes = () => {
             path=""
             element={
               <RequireAuth>
-                <Bookings />
+                <Bookings isPage />
               </RequireAuth>
             }
           />

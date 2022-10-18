@@ -20,31 +20,11 @@ import MyToolTip from '../molecules/MyToolTip';
 const InformationPanel = ({ profileData }) => {
   const [profile, setProfile] = useState();
 
-  const helpText = (
-    <>
-      <div>
-        Esta informacion no es obligatoria y solo se mostrara a los demas
-        usuarios si lo habilitas
-      </div>
-      <div>
-        <AiOutlineEye /> Puedes habilitar para que vean tu informacion con el
-        icono del ojo
-      </div>
-      <div>
-        <FiBell /> Alertas vía mail: Puedes habilitarlas todas o personalizarlas
-        y recibir solo la de los edificios que te interesan.
-      </div>
-      <div>
-        <FiBell /> Si quieres que se te notificará cuando te inviten a un nuevo
-        edificio
-      </div>
-    </>
-  );
-
   useEffect(() => {
     setProfile({
       profileConfig: profileData?.profileConfig,
       profileData: {
+        username: profileData?.username || '',
         name: profileData?.name || '',
         last_name: profileData?.last_name || '',
         email: profileData?.email || '',
@@ -54,18 +34,18 @@ const InformationPanel = ({ profileData }) => {
 
   const InformationField = ({ label, value, isDisableText, icons }) => {
     return (
-      <Box
-        component="div"
-        sx={{ display: 'flex', justifyContent: 'space-between' }}
-      >
-        <Box component="div" sx={{ display: 'flex' }}>
-          <Typography>{label} </Typography>
-          <Typography
-            sx={isDisableText ? { color: 'gray' } : { color: '#000' }}
-          >
-            {value}
-          </Typography>
-        </Box>
+      <Box component="div" sx={{ display: 'flex', marginBlock: '.25em' }}>
+        {value && (
+          <Box component="div" sx={{ display: 'flex', gap: '.5em' }}>
+            <Typography>{label}: </Typography>
+
+            <Typography
+              sx={isDisableText ? { color: 'gray' } : { color: '#000' }}
+            >
+              {value}
+            </Typography>
+          </Box>
+        )}
       </Box>
     );
   };
@@ -77,10 +57,13 @@ const InformationPanel = ({ profileData }) => {
         flexDirection: 'column',
       }}
     >
-      <Typography>
-        Informacion adicional
-        <MyToolTip text={helpText} icon={<AiFillQuestionCircle />} />
-      </Typography>
+      {profile?.profileData && (
+        <InformationField
+          label={'Username'}
+          value={profile?.profileData?.username}
+          isDisableText={false}
+        />
+      )}
 
       {profile?.profileData && (
         <InformationField
@@ -101,7 +84,7 @@ const InformationPanel = ({ profileData }) => {
 
       {profile?.profileData && (
         <InformationField
-          label={'Nombre'}
+          label={'Apellido'}
           value={profile?.profileData?.last_name}
           isDisableText={!profile?.profileConfig?.last_name?.visualization}
           icons={[
@@ -117,7 +100,7 @@ const InformationPanel = ({ profileData }) => {
       )}
       {profile?.profileData && (
         <InformationField
-          label={'Direccion de mail'}
+          label={'Email'}
           value={profile?.profileData?.email}
           isDisableText={!profile?.profileConfig?.email?.visualization}
           icons={[

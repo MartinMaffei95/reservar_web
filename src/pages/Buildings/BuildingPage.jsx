@@ -19,6 +19,7 @@ import moment from 'moment';
 
 import {
   MdOutlinePersonAddAlt,
+  MdOutlinePersonRemove,
   MdOutlineMeetingRoom,
   MdOutlineNoMeetingRoom,
   MdOutlineRoomPreferences,
@@ -29,9 +30,9 @@ import {
   titleStyle,
 } from '../../muiStyles';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeTenant } from '../../Redux/actions/buildingsActions';
+import { makeToast, removeTenant } from '../../Redux/actions/buildingsActions';
 import { useBuildings } from '../../Hooks/useBuildings';
-import { BookingsAccordion } from './BookingsAccordion';
+import { BookingsAccordion } from '../../Components/BookingsAccordion';
 
 const BuildingPage = () => {
   let { buildingId } = useParams();
@@ -118,7 +119,9 @@ const BuildingPage = () => {
                 sx={{ display: 'flex', justifyContent: 'space-between' }}
               >
                 <Typography>
-                  <Link to={`${s._id}`}>{s.name}</Link>
+                  <Link className="nsLink" to={`${s._id}`}>
+                    {s.name}
+                  </Link>
                 </Typography>
                 {isReserved(s?.bookings) ? 'RESERVADO' : 'LIBRE'}
               </AccordionDetails>
@@ -163,7 +166,7 @@ const BuildingPage = () => {
                     );
                   }}
                   variant="outlined"
-                  startIcon={<MdOutlinePersonAddAlt />}
+                  startIcon={<MdOutlinePersonRemove />}
                   sx={{
                     backgroundColor: 'error.main',
                     borderColor: 'error.main',
@@ -192,15 +195,23 @@ const BuildingPage = () => {
             </AccordionDetails>
           </Accordion>
         </VerifiedModule>
+
         <Button
           onClick={() => {
-            removeTenant(localStorage.getItem('userID'), {
-              buildingId: buildingId,
-            });
+            dispatch(
+              removeTenant(
+                localStorage.getItem('userID'),
+                {
+                  buildingId: buildingId,
+                },
+                buildingId
+              )
+            );
           }}
           variant="outlined"
           startIcon={<MdOutlinePersonAddAlt />}
           sx={{
+            marginTop: '2em',
             backgroundColor: 'error.main',
             borderColor: 'error.main',
             color: '#fff',

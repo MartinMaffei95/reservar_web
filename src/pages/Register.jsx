@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, TextField, Button } from '@mui/material';
+import { Grid, Box, TextField, Button, Typography } from '@mui/material';
 import usePostFetch from '../Hooks/usePostFetch';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
@@ -7,10 +7,14 @@ import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { initialFormStyle } from '../muiStyles';
 
+//SWAL
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
 const Register = () => {
   const { data, loading, error, fetchPostData } = usePostFetch();
   let navigate = useNavigate();
-
+  const MySwal = withReactContent(Swal);
   const initialValues = {
     username: '',
     password: '',
@@ -56,14 +60,43 @@ const Register = () => {
   useEffect(() => {
     if (data.message === 'USER_CREATED') {
       localStorage.setItem('username', data?.user?.username);
-
+      MySwal.fire({
+        title: 'Felicitaciones!',
+        icon: 'success',
+        text: 'Tu usuario fue creado',
+        focusConfirm: true,
+        confirmButtonText: 'Quiero ingresar!',
+        background: '#fff',
+        customClass: {
+          actions: 'test',
+          confirmButton: 'btn primary',
+        },
+        buttonsStyling: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/login', { replace: true });
+        }
+      });
       return navigate('/login', { replace: true });
     }
     //ToDo: create error messages
   }, [loading]);
   return (
-    <>
-      Register
+    <Grid
+      container
+      direction="column"
+      justifyContent="center"
+      alignItems="center"
+      sx={{
+        // maxWidth: '90%',
+        // minWidth: '80%',
+        height: '100vh',
+        width: '100vw',
+        // marginBlock: 'auto',
+      }}
+    >
+      <Typography>REGISTER</Typography>
+      <Typography sx={{ paddingBottom: '3em' }}>Creando momentos</Typography>
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -120,7 +153,8 @@ const Register = () => {
           Registrarme
         </Button>
       </Box>
-    </>
+      <Link to="/login">Ingresar</Link>
+    </Grid>
   );
 };
 

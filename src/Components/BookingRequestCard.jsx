@@ -7,14 +7,22 @@ import {
   ButtonGroup,
   Box,
   Divider,
+  Icon,
 } from '@mui/material/';
-import { buildingCard, cardContent, inviteRequestCard } from '../muiStyles';
-import { MdCheck, MdClose } from 'react-icons/md';
-import usePostFetch from '../Hooks/usePostFetch';
+import {
+  bookingData,
+  buildingCard,
+  cardContent,
+  inviteRequestCard,
+} from '../muiStyles';
+import { MdCheck, MdClose, MdMeetingRoom } from 'react-icons/md';
 import moment from 'moment';
-import { postAction } from '../services/axiosActions';
 import { useSelector, useDispatch } from 'react-redux';
 import { aceptBooking, denyBooking } from '../Redux/actions/buildingsActions';
+import translate from '../functions/translate';
+import { TbCalendarEvent } from 'react-icons/tb';
+import { HiOutlineOfficeBuilding } from 'react-icons/hi';
+
 const BookingRequest = ({
   buildingName,
   building_id,
@@ -26,25 +34,45 @@ const BookingRequest = ({
 }) => {
   const dispatch = useDispatch();
 
-  console.log(booking_id);
   const aceptRequest = () => {
     const body = { booking_id: booking_id };
-    dispatch(aceptBooking(space_id, body, building_id));
+    try {
+      dispatch(aceptBooking(space_id, body, building_id));
+    } catch (e) {
+      alert('nativ');
+    }
   };
   const denyRequest = () => {
     const body = { booking_id: booking_id };
-    dispatch(denyBooking(space_id, body, building_id));
+    try {
+      dispatch(denyBooking(space_id, body, building_id));
+    } catch (e) {}
   };
 
   return (
     <Card sx={inviteRequestCard}>
       <CardContent>
-        <Typography>{buildingName}</Typography>
-        <Typography>{spaceName}</Typography>
-        <Box sx={{ display: 'flex' }}>
-          <Typography>{moment(date).format('MM/DD/YY')} - </Typography>
-          <Divider orientation="vertical" flexItem light />
-          <Typography>{time}</Typography>
+        <Box sx={bookingData}>
+          <Icon>
+            <HiOutlineOfficeBuilding />
+          </Icon>
+          <Typography>{buildingName}</Typography>
+        </Box>
+        <Box sx={bookingData}>
+          <Icon>
+            <MdMeetingRoom />
+          </Icon>
+          <Typography>{spaceName}</Typography>
+        </Box>
+        <Box sx={bookingData}>
+          <Icon>
+            <TbCalendarEvent />
+          </Icon>
+          <Typography sx={{ marginRight: '.5em' }}>
+            {moment(date).format('MM/DD/YY')}
+          </Typography>
+
+          <Typography>{translate(time)}</Typography>
         </Box>
       </CardContent>
       <CardActions>

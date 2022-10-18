@@ -10,6 +10,11 @@ import {
 import axios from 'axios';
 import { deleteAction, postAction } from '../../services/axiosActions';
 
+import { toast } from 'react-toastify';
+//SWAL
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
 export const loading = (state) => ({
   type: LOADING,
   payload: state,
@@ -61,7 +66,8 @@ export const getSpecificBuilding = (building_id) => async (dispatch) => {
 
 export const getBookingsOfSpace = (spaceId) => async (dispatch) => {
   dispatch(loading(true));
-
+  let onWaitBookings = [];
+  let confirmedBookings = [];
   axios(`${process.env.REACT_APP_URI}/bookings/?spaceId=${spaceId}`, {
     method: 'GET',
     headers: {
@@ -70,7 +76,18 @@ export const getBookingsOfSpace = (spaceId) => async (dispatch) => {
     },
   })
     .then((res) => {
-      dispatch(getBookings(res?.data?.bookings));
+      res?.data?.bookings?.map((booking) => {
+        if (booking?.reservationAccepted === true) {
+          if (!confirmedBookings?.includes(booking)) {
+            confirmedBookings?.push(booking);
+          }
+        } else if (booking?.reservationAccepted === false) {
+          if (!onWaitBookings?.includes(booking)) {
+            onWaitBookings?.push(booking);
+          }
+        }
+      });
+      dispatch(getBookings({ onWaitBookings, confirmedBookings }));
     })
     .catch((err) => {
       dispatch(requestFailure(err));
@@ -100,25 +117,16 @@ export const getOnHoldBookings = (building_id) => async (dispatch) => {
     });
 };
 
-export const removeTenant =
-  (userId, bodyData, buildingId) => async (dispatch) => {
-    try {
-      dispatch(loading(true));
-
-      const deleteReq = await deleteAction(
-        `users/removeTenant/${userId}`,
-        bodyData
-      );
-      dispatch(loading(false));
-      dispatch(getSpecificBuilding(buildingId));
-
-      if (deleteReq.message === 'REMOVED_USER_FROM_BUILDING') {
-        alert('Eliminado');
-      }
-    } catch (error) {
-      alert(error.response.data.message);
-    }
-  };
+export const removeTenant = (userId, body, building_id) => async (dispatch) => {
+  try {
+    dispatch(loading(true));
+    const response = await deleteAction(`users/removeTenant/${userId}`, body);
+    dispatch(loading(false));
+    dispatch(getSpecificBuilding(building_id));
+  } catch (error) {
+    alert(error.response.data.message);
+  }
+};
 
 export const aceptBooking =
   (space_id, body, building_id) => async (dispatch) => {
@@ -127,9 +135,16 @@ export const aceptBooking =
       let response = await postAction(`spaces/${space_id}/acept`, body);
       dispatch(loading(false));
       dispatch(getOnHoldBookings(building_id));
+      dispatch(makeToast('success', 'Se confirmó la reserva'));
     } catch (e) {
       console.log(e.response.data.message);
-      alert('rotura');
+      dispatch(
+        makeSwal(
+          'errorInformation',
+          'No se pudo confirmar',
+          'Existe una reserva hecha en ese dia y horario'
+        )
+      );
     }
   };
 
@@ -141,8 +156,88 @@ export const denyBooking =
       let response = await postAction(`spaces/${space_id}/deny`, body);
       dispatch(loading(false));
       dispatch(getOnHoldBookings(building_id));
+      dispatch(makeToast('warning', 'La reserva NO fue aceptada'));
     } catch (e) {
       console.log(e.response.data.message);
       alert('rotura');
     }
   };
+
+export function makeSwal(status, title, text) {
+  return function (dispatch) {
+    switch (status) {
+      case 'errorInformation':
+        withReactContent(Swal).fire({
+          title: title,
+          text: text,
+          icon: 'error',
+          focusConfirm: true,
+          confirmButtonText: 'Aceptar',
+          background: '#fff',
+          customClass: {
+            actions: 'test',
+            confirmButton: 'btn secondary',
+          },
+          buttonsStyling: false,
+        });
+        break;
+
+      default:
+        break;
+    }
+  };
+}
+
+export function makeToast(status, msg) {
+  return function (dispatch) {
+    switch (status) {
+      case 'success':
+        toast.success(msg, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+        });
+        break;
+      case 'error':
+        toast.error(msg, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+        });
+        break;
+      case 'warning':
+        toast.warning(msg, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+        });
+        break;
+      case 'information':
+        toast.information(msg, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+        });
+        break;
+
+      default:
+        break;
+    }
+  };
+}

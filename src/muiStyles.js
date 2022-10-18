@@ -27,6 +27,13 @@ export const notificationsMenuStyle = {
   //   zIndex: 0,
   // },
 };
+export const notificationStyle = {
+  display: 'flex',
+  gap: '.5em',
+  '& .MuiIcon-root': {
+    height: '100%',
+  },
+};
 
 export const initialFormStyle = {
   margin: '1em',
@@ -69,6 +76,24 @@ export const accordionSummaryStyle = {
     alignItems: 'center',
   },
   gap: '1rem',
+};
+export const bookingCardContainer = {
+  display: 'flex',
+  justifyContent: 'space-evenly',
+  flexWrap: 'wrap',
+};
+
+export const bookingCard = {
+  minWidth: '20em',
+  maxWidth: '50vw',
+  display: 'flex',
+  justifyContent: 'space-between',
+  marginBlock: '.5em',
+};
+
+export const bookingData = {
+  display: 'flex',
+  marginBlock: '.5em',
 };
 
 export const buildingCard = {
@@ -164,5 +189,53 @@ export const calendarDayStyle_morning = {
     background: morningColor,
     border: `solid 4px ${morningColor}`,
     borderRadius: '50%',
+  },
+};
+
+const allDayColor = 'red';
+// background: '#D5DCF2',
+
+export const calendarDayStyle_allDay = {
+  position: 'relative',
+  border: `solid 2px ${allDayColor}`,
+  // '&::before': {
+  //   content: `''`,
+  //   position: 'absolute',
+  //   left: '0',
+  //   top: '0',
+  //   width: '1px',
+  //   height: '1px',
+  //   background: allDayColor,
+  //   border: `solid 4px ${allDayColor}`,
+  //   borderRadius: '50%',
+  // },
+};
+
+// buttons styles
+
+export const successButtonStyle = {
+  background: 'green',
+};
+
+export const profileEditStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  '& .MuiBox-root': {
+    display: 'flex',
+    flexGrow: '1',
+    '& .MuiTextField-root': { width: '100%' },
+  },
+};
+
+// -- TABLET GRID STYLE
+export const resizeAsideStyle = {
+  minWidth: '95%',
+  maxWidth: '100%',
+  overflowY: 'scroll',
+  alignItems: 'center',
+
+  '& .MuiPaper-root': {
+    minWidth: '90%',
+    maxWidth: '95%',
   },
 };

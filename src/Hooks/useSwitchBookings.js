@@ -6,6 +6,7 @@ const useSwitchBookings = (objBookings) => {
   let morningBookings = [];
   let afternonBookings = [];
   let nightBookings = [];
+  let allDayBookings = [];
 
   const switchBookings = (objBookings) => {
     setLoadingBookings(true);
@@ -30,6 +31,11 @@ const useSwitchBookings = (objBookings) => {
           if (nightBookings.includes(moment(date).format('MM DD YY'))) break;
           nightBookings.push(moment(date).format('MM DD YY'));
           break;
+
+        case 'ALL_DAY':
+          if (allDayBookings.includes(moment(date).format('MM DD YY'))) break;
+          allDayBookings.push(moment(date).format('MM DD YY'));
+          break;
       }
     }
     setLoadingBookings(false);
@@ -37,7 +43,13 @@ const useSwitchBookings = (objBookings) => {
   useEffect(() => {
     switchBookings(objBookings);
   }, [objBookings]);
-  return { morningBookings, afternonBookings, nightBookings, loadingBookings };
+  return {
+    morningBookings,
+    afternonBookings,
+    nightBookings,
+    allDayBookings,
+    loadingBookings,
+  };
 };
 
 export default useSwitchBookings;

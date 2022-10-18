@@ -14,6 +14,7 @@ import moment from 'moment';
 import useSwitchBookings from '../Hooks/useSwitchBookings';
 import {
   calendarDayStyle_afternon,
+  calendarDayStyle_allDay,
   calendarDayStyle_morning,
   calendarDayStyle_night,
 } from '../muiStyles';
@@ -24,6 +25,8 @@ const renderizeDays = (bookings) => (day, selectedDays, pickersDayProps) => {
   let selectedDay_morning = {};
   let selectedDay_afternon = {};
   let selectedDay_night = {};
+  let selectedDay_allDay = {};
+
   // Pseudo-code here! You will have to use the proper functions from the
   // date-fns library to evaluate if 'day' is in your dateArray.
   if (
@@ -42,9 +45,20 @@ const renderizeDays = (bookings) => (day, selectedDays, pickersDayProps) => {
   ) {
     selectedDay_morning = calendarDayStyle_morning;
   }
+
+  if (
+    bookings?.allDayBookings?.find((date) => moment(date).isSame(day, 'day'))
+  ) {
+    selectedDay_allDay = calendarDayStyle_allDay;
+  }
   return (
     <PickersDay
-      sx={[selectedDay_morning, selectedDay_afternon, selectedDay_night]}
+      sx={[
+        selectedDay_morning,
+        selectedDay_afternon,
+        selectedDay_night,
+        selectedDay_allDay,
+      ]}
       {...pickersDayProps}
     />
   );
@@ -57,11 +71,19 @@ const FieldDatePicker = ({
   disabled,
 }) => {
   const bookings = useSelector((state) => state.buildingsReducer.bookings);
+  const standByBookings = useSelector(
+    (state) => state.buildingsReducer.bookings
+  );
 
   const [dateState, setDateState] = useState(action?.values?.date || moment());
   const [renderBookings, setRenderBookings] = useState({});
-  const { morningBookings, afternonBookings, nightBookings, loadingBookings } =
-    useSwitchBookings(bookings);
+  const {
+    morningBookings,
+    afternonBookings,
+    nightBookings,
+    allDayBookings,
+    loadingBookings,
+  } = useSwitchBookings(bookings);
 
   const handleDate = (newValue) => {
     if (action) {
@@ -71,7 +93,12 @@ const FieldDatePicker = ({
   };
 
   useEffect(() => {
-    setRenderBookings({ morningBookings, afternonBookings, nightBookings });
+    setRenderBookings({
+      morningBookings,
+      afternonBookings,
+      nightBookings,
+      allDayBookings,
+    });
   }, [bookings]);
 
   return (

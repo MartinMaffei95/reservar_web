@@ -1,0 +1,114 @@
+/* #### BUTTONS ### */
+
+.btn {
+  background: none;
+  border: none;
+  letter-spacing: 0.03rem;
+  border-radius: 8px;
+  padding: 0.2rem 0.5rem;
+  margin: 0.2rem 0.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 3rem;
+  min-width: 3rem;
+
+  font-size: var(--nonrmalTextSize);
+  font-weight: 700;
+}
+
+.btn svg {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.btn.link {
+}
+
+.btn.accent {
+  background: var(--accentColorDark);
+  color: #fff;
+}
+.btn.primary {
+  background: var(--accentColor);
+  color: #fff;
+  transition: color 0.2s;
+}
+.btn.primary:hover {
+  background: var(--accentColorTransp);
+  color: #000;
+}
+
+.btn.primary:focus {
+  outline: solid 3px var(--accentColorDark);
+}
+
+.btn.secondary {
+  border: solid 2px var(--dominantColor);
+}
+
+.btn.secondary.invert {
+  border: solid 2px #fff;
+  color: #fff;
+}
+
+.btn.secondary:hover {
+  background-color: var(--dominantColorSoft);
+}
+
+.btn.animate {
+  /* border-bottom: solid 2px var(--dominantColor); */
+  position: relative;
+}
+
+.btn.animate::after {
+  content: '';
+  background-color: var(--complementaryColor);
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 00%;
+  height: 2px;
+  transition: 0.3s ease-in-out;
+}
+
+.btn.animate::before {
+  content: '';
+  background-color: var(--complementaryColor);
+  position: absolute;
+  right: 50%;
+  top: 100%;
+  width: 00%;
+  height: 2px;
+  transition: 0.3s ease-in-out;
+}
+
+.btn.animate:hover::before,
+.btn.animate:hover::after {
+  width: 50%;
+}
+
+.btn.success {
+  background-color: rgb(68, 118, 68);
+  border: 2px solid rgb(43, 76, 43);
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.03rem;
+}
+
+.btn.danger {
+  background-color: rgb(230, 83, 83);
+  border: 2px solid #9c2f2f;
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.03rem;
+}
+
+.btn.informative {
+  background-color: rgb(52, 136, 149);
+  border: 2px solid rgb(35, 93, 102);
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.03rem;
+}

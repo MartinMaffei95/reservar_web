@@ -1,10 +1,25 @@
 import { useState, Fragment } from 'react';
-import { Menu, MenuItem, IconButton, Badge, Typography } from '@mui/material';
+import {
+  Menu,
+  MenuItem,
+  Icon,
+  IconButton,
+  Badge,
+  Typography,
+  Box,
+} from '@mui/material';
 import { MdMeetingRoom } from 'react-icons/md';
 import { useSelector, useDispatch } from 'react-redux';
-import { notificationsMenuStyle } from '../muiStyles';
+import {
+  bookingData,
+  notificationsMenuStyle,
+  notificationStyle,
+} from '../muiStyles';
 import axios from 'axios';
 import { getNotifications } from '../Redux/actions/userActions';
+import moment from 'moment';
+import translate from '../functions/translate';
+import { BsCalendarCheck, BsCalendarX } from 'react-icons/bs';
 const NotificationIcon = () => {
   const notifications = useSelector((state) => state.userReducer.notifications);
   const dispatch = useDispatch();
@@ -55,13 +70,37 @@ const NotificationIcon = () => {
   };
 
   const notificationMessage = (notification) => {
-    switch (notification.response) {
+    switch (notification?.response) {
       case 'BOOKING_ACEPTED':
-        return `Tu reserva en ${notification.building.name}/${notification.space.name} fue aceptada`;
+        return (
+          <>
+            <Icon sx={{ color: 'success.main' }}>
+              <BsCalendarCheck />
+            </Icon>
+            <Typography>
+              Tu reserva en {notification?.building?.name}/
+              {notification?.space?.name} del dia
+              {moment(notification?.booking?.date).format('MM/DD/YY')}-
+              {translate(notification?.booking?.time)} fue aceptada
+            </Typography>
+          </>
+        );
       case 'BOOKING_DENIED':
-        return `Tu reserva en ${notification.building.name}/${notification.space.name} no fue aceptada`;
+        return (
+          <>
+            <Icon sx={{ color: 'error.main' }}>
+              <BsCalendarX />
+            </Icon>
+            <Typography>
+              Tu reserva en {notification?.building?.name}/
+              {notification?.space?.name} del dia
+              {moment(notification?.booking?.date).format('MM/DD/YY')}-
+              {translate(notification?.booking?.time)} no fue aceptada
+            </Typography>
+          </>
+        );
       default:
-        return notification.message;
+        return notification?.message;
     }
   };
 
@@ -96,13 +135,16 @@ const NotificationIcon = () => {
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
           {notifications.map((n) =>
-            n.viewed ? (
+            !n.viewed ? (
               <MenuItem key={n?._id}>
-                <Typography>{notificationMessage(n)}</Typography>
+                <Box sx={notificationStyle}>{notificationMessage(n)}</Box>
               </MenuItem>
             ) : (
-              <MenuItem sx={{ background: '#ccccff' }} key={n?._id}>
-                <Typography>{notificationMessage(n)}</Typography>
+              <MenuItem
+                sx={{ background: '#ebebeb', width: '100%' }}
+                key={n?._id}
+              >
+                <Box sx={notificationStyle}>{notificationMessage(n)}</Box>
               </MenuItem>
             )
           )}
