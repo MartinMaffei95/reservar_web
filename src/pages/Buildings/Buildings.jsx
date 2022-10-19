@@ -67,7 +67,7 @@ const Buildings = () => {
         <Grid
           container
           direction="column"
-          justifyContent="center"
+          // justifyContent="center"
           alignItems="center"
           sx={
             isPhone

@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 export const createBooking = (endpoint, newBooking) => {
   const request = axios({
     method: 'post',
@@ -40,6 +41,19 @@ export const postAction = (endpoint, body) => {
 export const deleteAction = (endpoint, body) => {
   const request = axios({
     method: 'DELETE',
+    url: `${process.env.REACT_APP_URI}/${endpoint}`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+    data: body,
+  });
+  return request.then((res) => res.data);
+};
+
+export const putAction = (endpoint, body) => {
+  const request = axios({
+    method: 'PUT',
     url: `${process.env.REACT_APP_URI}/${endpoint}`,
     headers: {
       'Content-Type': 'application/json',

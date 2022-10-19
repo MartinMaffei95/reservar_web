@@ -6,6 +6,9 @@ import {
   GET_MY_NOTIFICATIONS,
 } from './actions';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { makeSwal } from './buildingsActions';
+import { putAction } from '../../services/axiosActions';
 
 export const loading = (state) => ({
   type: LOADING,
@@ -32,9 +35,9 @@ export const getMyNotifications = (notifications) => ({
   payload: notifications,
 });
 
-export const getMyProfileData = (building_id) => async (dispatch) => {
+export const getMyProfileData = () => async (dispatch) => {
   dispatch(loading(true));
-
+  // const navigate = useNavigate;
   await axios(
     `${process.env.REACT_APP_URI}/users/${localStorage.getItem('userID')}`,
     {
@@ -51,6 +54,7 @@ export const getMyProfileData = (building_id) => async (dispatch) => {
     })
     .catch((err) => {
       dispatch(requestFailure(err));
+      // navigate('/login', { replace: true });
     });
 };
 
@@ -74,4 +78,27 @@ export const getNotifications = () => async (dispatch) => {
     .catch((err) => {
       dispatch(requestFailure(err));
     });
+};
+
+export const updateMyProfile = (updatedProfile) => async (dispatch) => {
+  try {
+    dispatch(loading(true));
+    const response = await putAction(
+      `users/${localStorage.getItem('userID')}`,
+      updatedProfile
+    ).then(() => {
+      dispatch(loading(false));
+      dispatch(getMyProfileData());
+    });
+  } catch (e) {
+    dispatch(loading(false));
+    console.log(e.response.data.message);
+    dispatch(
+      makeSwal(
+        'errorInformation',
+        'No se pudo actualizar',
+        'No pudimos actiañozar tu información'
+      )
+    );
+  }
 };

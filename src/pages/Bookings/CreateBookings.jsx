@@ -27,6 +27,7 @@ import withReactContent from 'sweetalert2-react-content';
 import { useDispatch } from 'react-redux';
 import {
   getBookingsOfSpace,
+  makeSwal,
   makeToast,
 } from '../../Redux/actions/buildingsActions';
 import useTranslate from '../../Hooks/useTranslate';
@@ -45,7 +46,6 @@ const CreateBookings = () => {
   const postHook = usePostFetch();
   const dispatch = useDispatch();
 
-  const MySwal = withReactContent(Swal);
   const onSubmit = async () => {
     let bodyObject = {
       date: moment(values.date).format('MM DD YY'),
@@ -59,7 +59,10 @@ const CreateBookings = () => {
       dispatch(
         makeToast(
           'success',
-          'Tu reserva fue creada. Un adminstrador deberá confirmarla'
+
+          buildings[buildingIndex]?.spaces[spaceIndex]?.needConfirmation
+            ? 'Tu reserva fue creada. Un adminstrador deberá confirmarla'
+            : 'Tu reserva fue creada.'
         )
       );
     } catch (e) {
@@ -67,19 +70,15 @@ const CreateBookings = () => {
       console.log(message);
       switch (message) {
         case 'HAVE_ANOTHER_RESERVATION':
-          MySwal.fire({
-            title: 'Tenemos otra reserva',
-            text: 'Ya tenemos una reserva en este horario pero puedes intentar otro',
-            icon: 'error',
-            focusConfirm: true,
-            confirmButtonText: 'Reintentar',
-            background: '#fff',
-            customClass: {
-              actions: 'test',
-              confirmButton: 'btn primary',
-            },
-            buttonsStyling: false,
-          });
+          dispatch(
+            makeSwal(
+              'errorInformation',
+              'Tenemos otra reserva',
+              'Ya tenemos una reserva en este horario pero puedes intentar otro',
+              'Reintentar'
+            )
+          );
+
           break;
       }
     }
@@ -247,7 +246,7 @@ const CreateBookings = () => {
             Crear reserva
           </Button>
         </Grid>
-        {!isPhone && <Bookings />}
+        {!isPhone && <Bookings disableBtn />}
       </Grid>
     </div>
   );

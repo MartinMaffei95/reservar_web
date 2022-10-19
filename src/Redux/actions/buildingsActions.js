@@ -163,7 +163,7 @@ export const denyBooking =
     }
   };
 
-export function makeSwal(status, title, text) {
+export function makeSwal(status, title, text, btnText) {
   return function (dispatch) {
     switch (status) {
       case 'errorInformation':
@@ -172,7 +172,7 @@ export function makeSwal(status, title, text) {
           text: text,
           icon: 'error',
           focusConfirm: true,
-          confirmButtonText: 'Aceptar',
+          confirmButtonText: btnText || 'Aceptar',
           background: '#fff',
           customClass: {
             actions: 'test',

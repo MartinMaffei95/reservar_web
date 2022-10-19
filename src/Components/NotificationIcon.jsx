@@ -148,9 +148,9 @@ const NotificationIcon = () => {
               </MenuItem>
             )
           )}
-          <MenuItem sx={{ display: 'flex', justifyContent: 'center' }}>
+          {/* <MenuItem sx={{ display: 'flex', justifyContent: 'center' }}>
             <Typography>Ver todas...</Typography>
-          </MenuItem>
+          </MenuItem> */}
         </Menu>
       </Fragment>
     </>

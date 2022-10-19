@@ -1,84 +1,47 @@
+import { useState } from 'react';
+import { useResize } from '../../Hooks/useResize';
+
+//Components
+
 import {
   Paper,
   Grid,
   Typography,
-  Tooltip,
-  Icon,
-  ButtonGroup,
   Button,
   Box,
   Accordion,
   AccordionSummary,
   AccordionDetails,
 } from '@mui/material';
-import { AiFillQuestionCircle } from 'react-icons/ai';
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { FiBell, FiBellOff } from 'react-icons/fi';
-
-import { useState, useEffect } from 'react';
 import Header from '../../Components/Header';
-import useFetch from '../../Hooks/useFetch';
+import InformationPanel from '../../Components/InformationPanel';
+import EditInformationPanel from '../../Components/EditInformationPanel';
+import MyToolTip from '../../molecules/MyToolTip';
+import Bookings from '../Bookings/Bookings';
+
+// styles and icons
 import {
   accordionSummaryStyle,
   profileInformationStyle,
 } from '../../muiStyles';
-import InformationPanel from '../../Components/InformationPanel';
-import EditInformationPanel from '../../Components/EditInformationPanel';
-import MyToolTip from '../../molecules/MyToolTip';
+import { AiFillQuestionCircle } from 'react-icons/ai';
+import { FiBell, FiBellOff } from 'react-icons/fi';
+import { configuration_helpText } from '../../tootipsTexts';
 
 //REDUX
 import { useSelector } from 'react-redux';
-import Bookings from '../Bookings/Bookings';
-import { useResize } from '../../Hooks/useResize';
 
 const MyProfile = () => {
-  const { data, loading } = useFetch(`users/${localStorage.getItem('userID')}`);
-  const [profileInformation, setProfileInformation] = useState();
-  const [config, setConfig] = useState();
   const [editing, setEditing] = useState(false);
-  const [open, setOpen] = useState(false);
-
   const { isPhone } = useResize();
+  // redux state
+  const myUser = useSelector((state) => state?.userReducer?.myUserInformation);
 
-  const myBuildings = useSelector(
-    (state) => state?.userReducer?.myUserInformation?.buildings
-  );
-  const handleTooltipClose = () => {
-    setOpen(false);
-  };
   const accordeonStyle = {
     width: '90vw',
     marginBlock: '.5rem',
   };
-  const handleTooltipOpen = () => {
-    setOpen(true);
-  };
 
-  useEffect(() => {
-    setProfileInformation(data?.user);
-    setConfig(data?.user?.profileConfig);
-  }, [loading, data]);
-
-  const helpText = (
-    <>
-      <div>
-        Esta informacion no es obligatoria y solo se mostrara a los demas
-        usuarios si lo habilitas
-      </div>
-      <div>
-        <AiOutlineEye /> Puedes habilitar para que vean tu informacion con el
-        icono del ojo
-      </div>
-      {/* <div>
-        <FiBell /> Alertas vía mail: Puedes habilitarlas todas o personalizarlas
-        y recibir solo la de los edificios que te interesan.
-      </div>
-      <div>
-        <FiBell /> Si quieres que se te notificará cuando te inviten a un nuevo
-        edificio
-      </div> */}
-    </>
-  );
   return (
     <>
       <Header title={'Mi informacion'} />
@@ -122,7 +85,7 @@ const MyProfile = () => {
           >
             {!editing ? (
               <Paper elevation={4} sx={profileInformationStyle}>
-                <InformationPanel profileData={profileInformation} />
+                <InformationPanel profileData={myUser} />
                 <Button
                   onClick={() => {
                     setEditing(true);
@@ -165,19 +128,27 @@ const MyProfile = () => {
                   >
                     Guardar
                   </Button>
-                  <MyToolTip text={helpText} icon={<AiFillQuestionCircle />} />
+                  <MyToolTip
+                    text={configuration_helpText}
+                    icon={<AiFillQuestionCircle />}
+                  />
                 </Box>
-                <EditInformationPanel profileData={profileInformation} />
+                <EditInformationPanel
+                  closeEdit={() => {
+                    setEditing(false);
+                  }}
+                  profileData={myUser}
+                />
               </Paper>
             )}
           </Box>
           <Paper elevation={4} sx={profileInformationStyle}>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <Typography>Tus edificios: </Typography>
-              <Typography>{myBuildings?.length}</Typography>
+              <Typography>{myUser?.buildings?.length}</Typography>
             </Box>
-            {myBuildings?.map((b) => (
-              <Accordion sx={accordeonStyle} elevation={4}>
+            {myUser?.buildings?.map((b) => (
+              <Accordion key={b?._id} sx={accordeonStyle} elevation={4}>
                 <AccordionSummary expandIcon={'▼'} sx={accordionSummaryStyle}>
                   <Typography> {b?.name}</Typography>
                   <Button
@@ -196,7 +167,7 @@ const MyProfile = () => {
                   >
                     <Typography>Administrador/es</Typography>
                     {b?.admin?.map((a) => (
-                      <Typography>{a.name}</Typography>
+                      <Typography key={a._id}>{a.name}</Typography>
                     ))}
                   </Box>
                   <Box

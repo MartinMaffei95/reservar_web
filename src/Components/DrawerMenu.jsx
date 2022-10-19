@@ -6,16 +6,17 @@ import { BiUserCircle } from 'react-icons/bi';
 import { BsBuilding, BsCalendarCheck, BsDoorClosed } from 'react-icons/bs';
 import { MdOutlineAddToPhotos } from 'react-icons/md';
 import useLogOut from '../Controllers/logout';
+import { useResize } from '../Hooks/useResize';
 
 export default function DrawerMenu({ toggleDrawer, state }) {
   const { handleLogout } = useLogOut();
-
+  const { isPhone } = useResize();
   return (
     <div>
       <React.Fragment key={'left'}>
         <Drawer anchor={'left'} open={state} onClose={toggleDrawer(false)}>
           <Box
-            sx={{ width: '60vw' }}
+            sx={isPhone ? { width: '60vw' } : { width: '35vw' }}
             role="presentation"
             // onClick={toggleDrawer(false)}
             onKeyDown={toggleDrawer(false)}

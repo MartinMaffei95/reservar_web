@@ -27,10 +27,13 @@ import { profileEditStyle } from '../muiStyles';
 //SWAL
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { useDispatch } from 'react-redux';
+import { updateMyProfile } from '../Redux/actions/userActions';
 
-const EditInformationPanel = ({ profileData }) => {
+const EditInformationPanel = ({ profileData, closeEdit }) => {
   const [profile, setProfile] = useState(profileData);
   const putFetchHook = usePutFetch();
+  const dispatch = useDispatch();
 
   const MySwal = withReactContent(Swal);
 
@@ -42,7 +45,7 @@ const EditInformationPanel = ({ profileData }) => {
     if (e.key === 'Enter') e.preventDefault();
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const updateUserBody = {
       username: values.username,
       name: values.name,
@@ -61,11 +64,8 @@ const EditInformationPanel = ({ profileData }) => {
         },
       },
     };
-
-    putFetchHook.fetchPutData(
-      `users/${localStorage.getItem('userID')}`,
-      updateUserBody
-    );
+    await dispatch(updateMyProfile(updateUserBody));
+    closeEdit();
   };
 
   const errorMessages = {
@@ -140,6 +140,7 @@ const EditInformationPanel = ({ profileData }) => {
       );
     }
   };
+
   return (
     <Box
       component="form"

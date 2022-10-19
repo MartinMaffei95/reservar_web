@@ -30,6 +30,9 @@ import { ToastContainer } from 'react-toastify';
 const AppRoutes = () => {
   const RequireAuth = ({ children }) => {
     const dispatch = useDispatch();
+    const user = useSelector(
+      (state) => state?.userReducer?.buildings?.myUserInformation
+    );
     dispatch(
       getMyProfileData(
         localStorage.getItem('userID'),
@@ -38,6 +41,16 @@ const AppRoutes = () => {
     );
     if (!localStorage.getItem('token')) {
       return <Navigate to="/login" replace={true} />;
+    }
+    return children;
+  };
+
+  const RedirectHome = ({ children }) => {
+    const user = useSelector(
+      (state) => state?.userReducer?.buildings?.myUserInformation
+    );
+    if (user?.buildings > 0) {
+      return <Navigate to="/bookings/create" />;
     }
     return children;
   };
@@ -51,9 +64,11 @@ const AppRoutes = () => {
         <Route
           path="/"
           element={
-            <RequireAuth>
-              <Home />
-            </RequireAuth>
+            <RedirectHome>
+              <RequireAuth>
+                <CreateBuilding />
+              </RequireAuth>
+            </RedirectHome>
           }
         />
 
