@@ -1,28 +1,15 @@
-import { useState, Fragment, useId } from 'react';
-import {
-  Menu,
-  MenuItem,
-  Icon,
-  IconButton,
-  Badge,
-  Typography,
-  Box,
-} from '@mui/material';
-import { MdMeetingRoom } from 'react-icons/md';
+import { useState, Fragment } from 'react';
+import { MenuItem, Icon, Typography, Box } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  bookingData,
-  notificationsMenuStyle,
-  notificationStyle,
-} from '../muiStyles';
+import { notificationStyle, notificationStyle_last } from '../muiStyles';
 import axios from 'axios';
 import { getNotifications } from '../Redux/actions/userActions';
 import moment from 'moment';
 import translate from '../functions/translate';
 import { BsCalendarCheck, BsCalendarX } from 'react-icons/bs';
-import NotificationsScroll from './NotificationsScroll';
-const NotificationIcon = () => {
-  const componentId = useId();
+import InfiniteScroll from 'react-infinite-scroll-component';
+
+const NotificationsScroll = ({ id }) => {
   const notifications = useSelector(
     (state) => state?.userReducer?.allNotifications
   );
@@ -34,10 +21,7 @@ const NotificationIcon = () => {
   const [unviewedNotifications, setUnviewedNotifications] = useState(
     notifications?.filter((n) => n?.viewed === false) || []
   );
-  const [renderNotifications, setRenderNotifications] = useState(notifications);
   const [actualPage, setActualPage] = useState(1);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [open, setOpen] = useState(false);
   // const open = anchorEl || false;
 
   const viewNotifications = async () => {
@@ -60,23 +44,6 @@ const NotificationIcon = () => {
     } catch (e) {
       alert('errorrrrrrr');
     }
-  };
-
-  const handleClick = (event) => {
-    setUnviewedNotifications(notifications?.filter((n) => n?.viewed === false));
-    setOpen(true);
-    setAnchorEl(event?.currentTarget);
-    if (unviewedNotifications?.length > 0) {
-      viewNotifications();
-    }
-  };
-  const handleClose = () => {
-    setUnviewedNotifications(notifications?.filter((n) => n?.viewed === false));
-    if (unviewedNotifications?.length > 0) {
-      viewNotifications();
-    }
-    setAnchorEl(null);
-    setOpen(false);
   };
 
   const loadMoreNotifications = () => {
@@ -119,41 +86,41 @@ const NotificationIcon = () => {
     }
   };
 
+  const test = () => {
+    console.log('auda');
+  };
   return (
-    <>
-      <IconButton onClick={handleClick} aria-label="notifications">
-        <Badge
-          badgeContent={
-            unviewedNotifications && unviewedNotifications?.length > 0
-              ? unviewedNotifications?.length
-              : 0
-          }
-          color="secondary"
-        >
-          <MdMeetingRoom color="#fff" />
-        </Badge>
-      </IconButton>
-      {/* NOTIFICATIONS */}
-      <Fragment>
-        <Menu
-          autoFocus={false}
-          anchorEl={anchorEl}
-          open={(open && open) || false}
-          onClose={handleClose}
-          // onClick={handleClose}
-          PaperProps={{
-            elevation: 4,
-            sx: notificationsMenuStyle,
-          }}
-          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-          id="testId"
-        >
-          <NotificationsScroll id={componentId} />
-        </Menu>
-      </Fragment>
-    </>
+    <InfiniteScroll
+      dataLength={notifications.length} //This is important field to render the next data
+      next={loadMoreNotifications}
+      // next={test}
+      hasMore={hasNextPage}
+      height={'240px'}
+      scrollableTarget={'testId'}
+      loader={
+        <MenuItem>
+          <Box sx={notificationStyle}>CARGANDO</Box>
+        </MenuItem>
+      }
+      endMessage={
+        <MenuItem sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Box sx={notificationStyle_last}>No quedan notificaciones</Box>
+        </MenuItem>
+      }
+    >
+      {notifications.map((n) =>
+        !n.viewed ? (
+          <MenuItem key={n?._id}>
+            <Box sx={notificationStyle}>{notificationMessage(n)}</Box>
+          </MenuItem>
+        ) : (
+          <MenuItem sx={{ background: '#ebebeb', width: '100%' }} key={n?._id}>
+            <Box sx={notificationStyle}>{notificationMessage(n)}</Box>
+          </MenuItem>
+        )
+      )}
+    </InfiniteScroll>
   );
 };
 
-export default NotificationIcon;
+export default NotificationsScroll;

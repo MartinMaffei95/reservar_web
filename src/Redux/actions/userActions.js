@@ -50,7 +50,7 @@ export const getMyProfileData = () => async (dispatch) => {
   )
     .then((res) => {
       dispatch(getMyUser(res?.data?.user));
-      dispatch(getNotifications());
+      dispatch(getNotifications(1));
     })
     .catch((err) => {
       dispatch(requestFailure(err));
@@ -58,27 +58,41 @@ export const getMyProfileData = () => async (dispatch) => {
     });
 };
 
-export const getNotifications = () => async (dispatch) => {
-  dispatch(loading(true));
-  await axios(
-    `${process.env.REACT_APP_URI}/users/${localStorage.getItem(
-      'userID'
-    )}/notifications`,
-    {
-      method: 'GET',
-      headers: {
-        contentType: 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
+export const getNotifications =
+  (page, actualNotifications) => async (dispatch) => {
+    if (!actualNotifications) {
+      actualNotifications = [];
     }
-  )
-    .then((res) => {
-      dispatch(getMyNotifications(res?.data?.notifications));
-    })
-    .catch((err) => {
-      dispatch(requestFailure(err));
-    });
-};
+    dispatch(loading(true));
+    await axios(
+      `${process.env.REACT_APP_URI}/users/${localStorage.getItem(
+        'userID'
+      )}/notifications/?page=${page || 1}`,
+      {
+        method: 'GET',
+        headers: {
+          contentType: 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      }
+    )
+      .then((res) => {
+        dispatch(
+          getMyNotifications({
+            notifications: actualNotifications.concat(
+              res?.data?.notifications?.docs
+            ),
+            pageData: {
+              page: page,
+              hasNextPage: res?.data?.notifications?.hasNextPage,
+            },
+          })
+        );
+      })
+      .catch((err) => {
+        dispatch(requestFailure(err));
+      });
+  };
 
 export const updateMyProfile = (updatedProfile) => async (dispatch) => {
   try {

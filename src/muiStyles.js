@@ -35,6 +35,14 @@ export const notificationStyle = {
   },
 };
 
+export const notificationStyle_last = {
+  display: 'flex',
+  gap: '.5em',
+  alignSelf: 'center',
+  fontSize: '1.1rem',
+  fontWeight: 'bolder',
+};
+
 export const initialFormStyle = {
   margin: '1em',
   width: '80vw',

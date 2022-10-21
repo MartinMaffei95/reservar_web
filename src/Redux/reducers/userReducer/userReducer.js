@@ -8,7 +8,11 @@ import {
 const initialStore = {
   loading: false,
   myUserInformation: {},
-  notifications: [],
+  allNotifications: [],
+  pageData: {
+    page: 1,
+    hasNextPage: false,
+  },
   error: '',
 };
 
@@ -34,7 +38,8 @@ export const userReducer = (state = initialStore, action) => {
     case GET_MY_NOTIFICATIONS: //## APP IS LOADING - THIS ACTION ONLY PUT LOADING TREO OR FALSE
       return {
         ...state,
-        notifications: action.payload,
+        pageData: action.payload.pageData,
+        allNotifications: action.payload.notifications,
       };
     default:
       return state;
