@@ -29,13 +29,18 @@ import { FiBell, FiBellOff } from 'react-icons/fi';
 import { configuration_helpText } from '../../tootipsTexts';
 
 //REDUX
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  addAlertOnBuilding,
+  removeAlertOnBuilding,
+} from '../../Redux/actions/buildingsActions';
 
 const MyProfile = () => {
   const [editing, setEditing] = useState(false);
   const { isPhone } = useResize();
   // redux state
   const myUser = useSelector((state) => state?.userReducer?.myUserInformation);
+  const dispatch = useDispatch();
 
   const accordeonStyle = {
     width: '90vw',
@@ -151,13 +156,27 @@ const MyProfile = () => {
               <Accordion key={b?._id} sx={accordeonStyle} elevation={4}>
                 <AccordionSummary expandIcon={'▼'} sx={accordionSummaryStyle}>
                   <Typography> {b?.name}</Typography>
-                  <Button
-                    onClick={() => {}}
-                    variant="outlined"
-                    //   startIcon={<MdOutlineMeetingRoom />}
-                  >
-                    <FiBell />
-                  </Button>
+                  {b.tenantsToAlert.includes(localStorage.getItem('userID')) ? (
+                    <Button
+                      onClick={() => {
+                        dispatch(removeAlertOnBuilding(b?._id));
+                      }}
+                      variant="outlined"
+                      //   startIcon={<MdOutlineMeetingRoom />}
+                    >
+                      <FiBell />
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => {
+                        dispatch(addAlertOnBuilding(b?._id));
+                      }}
+                      variant="outlined"
+                      //   startIcon={<MdOutlineMeetingRoom />}
+                    >
+                      <FiBellOff />
+                    </Button>
+                  )}
                 </AccordionSummary>
                 <AccordionDetails
                   sx={{ display: 'flex', flexDirection: 'column' }}

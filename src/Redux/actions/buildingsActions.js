@@ -14,6 +14,7 @@ import { toast } from 'react-toastify';
 //SWAL
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { getMyProfileData } from './userActions';
 
 export const loading = (state) => ({
   type: LOADING,
@@ -137,6 +138,7 @@ export const aceptBooking =
       dispatch(getOnHoldBookings(building_id));
       dispatch(makeToast('success', 'Se confirmó la reserva'));
     } catch (e) {
+      dispatch(loading(false));
       console.log(e.response.data.message);
       dispatch(
         makeSwal(
@@ -158,10 +160,39 @@ export const denyBooking =
       dispatch(getOnHoldBookings(building_id));
       dispatch(makeToast('warning', 'La reserva NO fue aceptada'));
     } catch (e) {
+      dispatch(loading(false));
       console.log(e.response.data.message);
-      alert('rotura');
+      dispatch(
+        makeSwal(
+          'errorInformation',
+          'No se pudo cancelar',
+          'Ocurrio un error en el servidor'
+        )
+      );
     }
   };
+
+export const addAlertOnBuilding = (building_id) => async (dispatch) => {
+  try {
+    dispatch(loading(true));
+    let response = await postAction(`buildings/${building_id}/alert`);
+    dispatch(loading(false));
+    dispatch(getMyProfileData());
+  } catch (e) {
+    dispatch(loading(false));
+  }
+};
+
+export const removeAlertOnBuilding = (building_id) => async (dispatch) => {
+  try {
+    dispatch(loading(true));
+    let response = await deleteAction(`buildings/${building_id}/alert`);
+    dispatch(loading(false));
+    dispatch(getMyProfileData());
+  } catch (e) {
+    dispatch(loading(false));
+  }
+};
 
 export function makeSwal(status, title, text, btnText) {
   return function (dispatch) {
