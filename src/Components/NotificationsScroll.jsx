@@ -86,8 +86,30 @@ const NotificationsScroll = ({ id }) => {
     }
   };
 
-  const test = () => {
-    console.log('auda');
+  const toMinutes = (paramDate) => {
+    let actualDate = new Date();
+    //Parsing the dates
+    paramDate = new Date(paramDate);
+    actualDate = new Date(actualDate);
+    //diferences between
+    const diference = actualDate - paramDate;
+    // returning the diference in minutes
+    const x = (actualDate - paramDate) / 1000 / 60;
+    let date = Math.round(x);
+    // RETURN MINUTES or HOURS or DATE
+    if (date <= 1) return 'Ahora';
+    if (date >= 2880) return `${actualDate.getDate()}-${actualDate.getMonth()}`;
+    if (date >= 1440) return `Ayer`;
+    if (date >= 60) return `${Math.floor(date / 60)} h`;
+    if (date > 1) return `${date} m`;
+  };
+
+  const minutesStyle = {
+    position: 'absolute',
+    // fontSize: '10px',
+    bottom: 0,
+    right: 0,
+    fontSize: '8px',
   };
   return (
     <InfiniteScroll
@@ -111,15 +133,24 @@ const NotificationsScroll = ({ id }) => {
         <>
           {notifications.map((n) =>
             !n.viewed ? (
-              <MenuItem key={n?._id}>
-                <Box sx={notificationStyle}>{notificationMessage(n)}</Box>
-              </MenuItem>
-            ) : (
               <MenuItem
-                sx={{ background: '#ebebeb', width: '100%' }}
+                sx={{ backgroundColor: 'action.disabled', width: '100%' }}
                 key={n?._id}
               >
                 <Box sx={notificationStyle}>{notificationMessage(n)}</Box>
+                <Typography sx={minutesStyle}>
+                  {toMinutes(n?.creattedAt)}
+                </Typography>
+              </MenuItem>
+            ) : (
+              <MenuItem
+                sx={{ backgroundColor: 'action.selected', width: '100%' }}
+                key={n?._id}
+              >
+                <Box sx={notificationStyle}>{notificationMessage(n)}</Box>
+                <Typography sx={minutesStyle}>
+                  {toMinutes(n?.createdAt)}
+                </Typography>
               </MenuItem>
             )
           )}

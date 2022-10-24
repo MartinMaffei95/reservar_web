@@ -1,16 +1,27 @@
 import * as React from 'react';
-import { Box, Menu, Drawer, Divider, IconButton } from '@mui/material';
+import {
+  Box,
+  Menu,
+  Drawer,
+  Divider,
+  IconButton,
+  Switch,
+  Icon,
+  Typography,
+  ListItem,
+} from '@mui/material';
 import { MdMenu, MdOutlineAccountCircle } from 'react-icons/md';
 import ListComp from '../molecules/ListComp';
-import { BiUserCircle } from 'react-icons/bi';
 import { BsBuilding, BsCalendarCheck, BsDoorClosed } from 'react-icons/bs';
 import { MdOutlineAddToPhotos } from 'react-icons/md';
 import useLogOut from '../Controllers/logout';
 import { useResize } from '../Hooks/useResize';
+import DarkModeChanger from '../molecules/DarkModeChanger';
 
 export default function DrawerMenu({ toggleDrawer, state }) {
   const { handleLogout } = useLogOut();
   const { isPhone } = useResize();
+
   return (
     <div>
       <React.Fragment key={'left'}>
@@ -38,6 +49,7 @@ export default function DrawerMenu({ toggleDrawer, state }) {
               }
               redirect={'/user/profile'}
             />
+
             <Divider />
 
             <ListComp
@@ -62,6 +74,8 @@ export default function DrawerMenu({ toggleDrawer, state }) {
               redirect={'/buildings/'}
             />
             <Divider />
+            <DarkModeChanger />
+
             <ListComp
               clickAction={handleLogout}
               text="CERRAR SESION"

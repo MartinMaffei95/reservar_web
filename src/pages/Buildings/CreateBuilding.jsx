@@ -226,78 +226,76 @@ const CreateBuilding = () => {
               />
             ))}
         </Stack>
-        <div>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={'▼'}
-              aria-controls="panel1bh-content"
-              id="panel1bh-header"
-            >
-              <Typography>Crear un espacio común</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Grid container direction="column" justifyContent="center">
+        <Accordion sx={{ marginBottom: '1rem' }}>
+          <AccordionSummary
+            expandIcon={'▼'}
+            aria-controls="panel1bh-content"
+            id="panel1bh-header"
+          >
+            <Typography>Crear un espacio común</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid container direction="column" justifyContent="center">
+              <FormControl variant="filled">
+                <TextField
+                  error={
+                    SpaceFormik.errors.space_name &&
+                    SpaceFormik.touched.space_name
+                  }
+                  name={'space_name'}
+                  value={SpaceFormik.values.space_name}
+                  label="Nombre"
+                  variant="filled"
+                  onChange={SpaceFormik.handleChange}
+                />
+
                 <FormControl variant="filled">
-                  <TextField
+                  <InputLabel>Reservar por:</InputLabel>
+
+                  <Select
+                    name={'timeSlotsFormat'}
                     error={
-                      SpaceFormik.errors.space_name &&
-                      SpaceFormik.touched.space_name
+                      SpaceFormik.errors.timeSlotsFormat &&
+                      SpaceFormik.touched.timeSlotsFormat
                     }
-                    name={'space_name'}
-                    value={SpaceFormik.values.space_name}
-                    label="Nombre"
-                    variant="filled"
+                    value={SpaceFormik.values.timeSlotsFormat}
                     onChange={SpaceFormik.handleChange}
-                  />
-
-                  <FormControl variant="filled">
-                    <InputLabel>Reservar por:</InputLabel>
-
-                    <Select
-                      name={'timeSlotsFormat'}
-                      error={
-                        SpaceFormik.errors.timeSlotsFormat &&
-                        SpaceFormik.touched.timeSlotsFormat
-                      }
-                      value={SpaceFormik.values.timeSlotsFormat}
-                      onChange={SpaceFormik.handleChange}
-                    >
-                      <MenuItem value={'PER_DAY'}>DIA</MenuItem>
-                      <MenuItem value={'BY_TIME_SLOT'}>FRANJA HORARIA</MenuItem>
-                    </Select>
-                  </FormControl>
-
-                  <Container sx={{ marginBlock: '1em' }}>
-                    <Typography mt={1} mb={1}>
-                      Necesita autorizacion?
-                    </Typography>
-                    <ToggleButtonGroup
-                      error={
-                        SpaceFormik.errors.needConfirmation &&
-                        SpaceFormik.touched.needConfirmation
-                      }
-                      value={SpaceFormik.values.needConfirmation}
-                      onChange={SpaceFormik.handleChange}
-                      color="primary"
-                      exclusive
-                      fullWidth
-                    >
-                      <ToggleButton name={'needConfirmation'} value="true">
-                        SI
-                      </ToggleButton>
-                      <ToggleButton name={'needConfirmation'} value="false">
-                        NO
-                      </ToggleButton>
-                    </ToggleButtonGroup>
-                  </Container>
+                  >
+                    <MenuItem value={'PER_DAY'}>DIA</MenuItem>
+                    <MenuItem value={'BY_TIME_SLOT'}>FRANJA HORARIA</MenuItem>
+                  </Select>
                 </FormControl>
-                <Button onClick={SpaceFormik.handleSubmit} variant="outlined">
-                  Crear zona comun
-                </Button>
-              </Grid>
-            </AccordionDetails>
-          </Accordion>
-        </div>
+
+                <Container sx={{ marginBlock: '1em' }}>
+                  <Typography mt={1} mb={1}>
+                    Necesita autorizacion?
+                  </Typography>
+                  <ToggleButtonGroup
+                    error={
+                      SpaceFormik.errors.needConfirmation &&
+                      SpaceFormik.touched.needConfirmation
+                    }
+                    value={SpaceFormik.values.needConfirmation}
+                    onChange={SpaceFormik.handleChange}
+                    color="primary"
+                    exclusive
+                    fullWidth
+                  >
+                    <ToggleButton name={'needConfirmation'} value="true">
+                      SI
+                    </ToggleButton>
+                    <ToggleButton name={'needConfirmation'} value="false">
+                      NO
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </Container>
+              </FormControl>
+              <Button onClick={SpaceFormik.handleSubmit} variant="outlined">
+                Crear zona comun
+              </Button>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
         <Button onClick={handleSubmit} variant="outlined">
           Guardar Edificio
         </Button>

@@ -1,4 +1,4 @@
-import { useState, Fragment, useId } from 'react';
+import { useState, Fragment, useId, useEffect } from 'react';
 import {
   Menu,
   MenuItem,
@@ -79,45 +79,9 @@ const NotificationIcon = () => {
     setOpen(false);
   };
 
-  const loadMoreNotifications = () => {
-    dispatch(getNotifications(actualPage + 1, notifications));
-    setActualPage((actualPage) => actualPage + 1);
-  };
-
-  const notificationMessage = (notification) => {
-    switch (notification?.response) {
-      case 'BOOKING_ACEPTED':
-        return (
-          <>
-            <Icon sx={{ color: 'success.main' }}>
-              <BsCalendarCheck />
-            </Icon>
-            <Typography>
-              Tu reserva en {notification?.building?.name}/
-              {notification?.space?.name} del dia
-              {moment(notification?.booking?.date).format('MM/DD/YY')}-
-              {translate(notification?.booking?.time)} fue aceptada
-            </Typography>
-          </>
-        );
-      case 'BOOKING_DENIED':
-        return (
-          <>
-            <Icon sx={{ color: 'error.main' }}>
-              <BsCalendarX />
-            </Icon>
-            <Typography>
-              Tu reserva en {notification?.building?.name}/
-              {notification?.space?.name} del dia
-              {moment(notification?.booking?.date).format('MM/DD/YY')}-
-              {translate(notification?.booking?.time)} no fue aceptada
-            </Typography>
-          </>
-        );
-      default:
-        return notification?.message;
-    }
-  };
+  useEffect(() => {
+    setUnviewedNotifications(notifications?.filter((n) => n?.viewed === false));
+  }, [notifications]);
 
   return (
     <>

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;300;600;700;900&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
 :root {
   --fontColor: rgb(0, 6, 24);
 
@@ -8,7 +9,7 @@
 
   /*## COLOR VARIABLES ##*/
   --dominantColor: #6e6c6f;
-  --dominantColorSoft: #c6c3c6;
+  --dominantColorSoft: #ededed;
   --complementaryColor: #1fadb7;
   --accentColor: #5481b7;
   --accentColorDark: #235377;
@@ -93,11 +94,16 @@ code {
     monospace;
 }
 
-.Morning {
-  background-color: red;
-}
-
 .nsLink {
   text-decoration: none;
   color: var(--fontColor);
 }
+
+.form_link {
+  color: var(--accentColorDark);
+  text-decoration: none;
+}
+
+/* .form_screen {
+  background-color: var(--dominantColorSoft);
+} */

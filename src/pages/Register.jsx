@@ -5,15 +5,18 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { initialFormStyle } from '../muiStyles';
+import { initialFormStyle, titleBox } from '../muiStyles';
 
 //SWAL
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { useDispatch } from 'react-redux';
+import { postAction } from '../services/axiosActions';
 
+import { loading, getMyProfileData } from '../Redux/actions/userActions';
 const Register = () => {
-  const { data, loading, error, fetchPostData } = usePostFetch();
   let navigate = useNavigate();
+  const dispatch = useDispatch();
   const MySwal = withReactContent(Swal);
   const initialValues = {
     username: '',
@@ -25,8 +28,55 @@ const Register = () => {
     if (e.key === 'Enter') e.preventDefault();
   };
 
-  const onSubmit = () => {
-    fetchPostData('auth/register', values);
+  const onSubmit = async () => {
+    dispatch(loading(true));
+
+    try {
+      const register = await postAction('auth/register', values);
+      dispatch(loading(false));
+      console.log(register);
+      if (register?.data?.message === 'USER_CREATED') {
+        localStorage.setItem('username', values?.username);
+        MySwal.fire({
+          title: 'Felicitaciones!',
+          icon: 'success',
+          text: 'Tu usuario fue creado',
+          focusConfirm: true,
+          confirmButtonText: 'Quiero ingresar!',
+          background: '#fff',
+          customClass: {
+            actions: 'test',
+            confirmButton: 'btn primary',
+          },
+          buttonsStyling: false,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate('/login', { replace: true });
+          }
+        });
+        return navigate('/login', { replace: true });
+      }
+    } catch (e) {
+      const { message } = e?.response?.data;
+      console.log(message);
+
+      dispatch(loading(false));
+      switch (message) {
+        case 'INVALID_PASSWORD':
+          formik.setErrors({
+            username: 'La contraseña no fue aceptada. Elige otra',
+          });
+          break;
+        case 'TAKEN_USERNAME':
+          formik.setErrors({
+            username: 'Ya existe otro usuario con ese nombre',
+          });
+          break;
+
+        default:
+          break;
+      }
+    }
   };
 
   const errorMessages = {
@@ -57,32 +107,9 @@ const Register = () => {
     setFieldValue,
   } = formik;
 
-  useEffect(() => {
-    if (data.message === 'USER_CREATED') {
-      localStorage.setItem('username', data?.user?.username);
-      MySwal.fire({
-        title: 'Felicitaciones!',
-        icon: 'success',
-        text: 'Tu usuario fue creado',
-        focusConfirm: true,
-        confirmButtonText: 'Quiero ingresar!',
-        background: '#fff',
-        customClass: {
-          actions: 'test',
-          confirmButton: 'btn primary',
-        },
-        buttonsStyling: false,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate('/login', { replace: true });
-        }
-      });
-      return navigate('/login', { replace: true });
-    }
-    //ToDo: create error messages
-  }, [loading]);
   return (
     <Grid
+      className={'form_screen'}
       container
       direction="column"
       justifyContent="center"
@@ -95,8 +122,13 @@ const Register = () => {
         // marginBlock: 'auto',
       }}
     >
-      <Typography>REGISTER</Typography>
-      <Typography sx={{ paddingBottom: '3em' }}>Creando momentos</Typography>
+      <Box sx={titleBox}>
+        <Typography variant="h1">TakeZoom</Typography>
+        <Typography variant="h3">Creando momentos</Typography>
+        <Typography variant="body1">
+          Registrate, crea (o encuentra) tu edificio y reservá
+        </Typography>
+      </Box>
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -152,8 +184,10 @@ const Register = () => {
         <Button type="submit" fullWidth variant="contained" disableElevation>
           Registrarme
         </Button>
+        <Link className="form_link" to="/login">
+          Ya tienes una cuenta? Ingresá aqui!
+        </Link>
       </Box>
-      <Link to="/login">Ingresar</Link>
     </Grid>
   );
 };

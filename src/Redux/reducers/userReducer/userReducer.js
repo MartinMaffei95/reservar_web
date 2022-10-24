@@ -3,10 +3,12 @@ import {
   GET_MY_USER,
   LOADING,
   GET_MY_NOTIFICATIONS,
+  CHANGE_THEME,
 } from '../../actions/actions';
 
 const initialStore = {
   loading: false,
+  darkOn: false, //false for 'light' or true for 'dark'
   myUserInformation: {},
   allNotifications: [],
   pageData: {
@@ -22,6 +24,11 @@ export const userReducer = (state = initialStore, action) => {
       return {
         ...state,
         loading: action.payload,
+      };
+    case CHANGE_THEME: //## APP IS LOADING - THIS ACTION ONLY PUT LOADING TREO OR FALSE
+      return {
+        ...state,
+        darkOn: action.payload,
       };
     case GET_MY_USER: //## APP IS LOADING - THIS ACTION ONLY PUT LOADING TREO OR FALSE
       return {

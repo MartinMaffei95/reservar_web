@@ -4,6 +4,7 @@ import {
   GET_MY_USER_SUCCESS,
   REQUEST_FAILURE,
   GET_MY_NOTIFICATIONS,
+  CHANGE_THEME,
 } from './actions';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -35,6 +36,11 @@ export const getMyNotifications = (notifications) => ({
   payload: notifications,
 });
 
+export const changeTheme = (state) => ({
+  type: CHANGE_THEME,
+  payload: state,
+});
+
 export const getMyProfileData = () => async (dispatch) => {
   dispatch(loading(true));
   // const navigate = useNavigate;
@@ -63,7 +69,6 @@ export const getNotifications =
     if (!actualNotifications) {
       actualNotifications = [];
     }
-    dispatch(loading(true));
     await axios(
       `${process.env.REACT_APP_URI}/users/${localStorage.getItem(
         'userID'
@@ -88,11 +93,9 @@ export const getNotifications =
             },
           })
         );
-        dispatch(loading(false));
       })
       .catch((err) => {
         dispatch(requestFailure(err));
-        dispatch(loading(false));
       });
   };
 

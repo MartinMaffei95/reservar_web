@@ -43,9 +43,20 @@ export const notificationStyle_last = {
   fontWeight: 'bolder',
 };
 
+export const titleBox = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  '& .MuiTypography-h1': { fontSize: '5rem', fontWeight: 'Bold' },
+  '& .MuiTypography-h3': { fontSize: '2.5rem' },
+  // '& .MuiTypography-body1': {},
+};
+
 export const initialFormStyle = {
   margin: '1em',
   width: '80vw',
+  margin: 'auto',
+
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',

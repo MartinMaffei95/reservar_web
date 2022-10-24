@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { initialFormStyle } from '../muiStyles';
+import { initialFormStyle, titleBox } from '../muiStyles';
 import { postAction } from '../services/axiosActions';
 import { useSelector, useDispatch } from 'react-redux';
 import { loading, getMyProfileData } from '../Redux/actions/userActions';
@@ -37,17 +37,16 @@ const Login = () => {
       const user = await postAction('auth/login', values);
       dispatch(loading(false));
 
-      if (user.message === 'LOGIN_SUCCESS') {
-        localStorage.setItem('token', user?.token);
-        localStorage.setItem('username', user?.user?.username);
-        localStorage.setItem('userID', user?.user?._id);
-        if (user?.user?.buildings?.length > 0)
+      if (user?.data?.message === 'LOGIN_SUCCESS') {
+        localStorage.setItem('token', user?.data?.token);
+        localStorage.setItem('username', user?.data?.user?.username);
+        localStorage.setItem('userID', user?.data?.user?._id);
+        if (user?.data?.user?.buildings?.length > 0)
           return navigate('/bookings/create', { replace: true });
         else return navigate('/buildings/create', { replace: true });
       }
     } catch (e) {
       const { message } = e?.response?.data;
-      console.log(message);
       dispatch(loading(false));
       switch (message) {
         case 'IVALID_PASSWORD':
@@ -127,9 +126,10 @@ const Login = () => {
   return (
     <>
       <Grid
+        className={'form_screen'}
         container
         direction="column"
-        justifyContent="center"
+        justifyContent="space-between"
         alignItems="center"
         sx={{
           // maxWidth: '90%',
@@ -139,8 +139,11 @@ const Login = () => {
           // marginBlock: 'auto',
         }}
       >
-        <Typography>LOGIN</Typography>
-        <Typography sx={{ paddingBottom: '3em' }}>Creando momentos</Typography>
+        <Box sx={titleBox}>
+          <Typography variant="h1">TakeZoom</Typography>
+          <Typography variant="h3">Creando momentos</Typography>
+          <Typography variant="body1">Ingresá tus datos y reservá</Typography>
+        </Box>
         <Box
           component="form"
           onSubmit={handleSubmit}
@@ -173,8 +176,10 @@ const Login = () => {
           <Button type="submit" fullWidth variant="contained" disableElevation>
             Ingresar
           </Button>
+          <Link className="form_link" to="/register">
+            No tienes usuario? Crear uno aqui!
+          </Link>
         </Box>
-        <Link to="/register">Crear un usuario</Link>
       </Grid>
     </>
   );

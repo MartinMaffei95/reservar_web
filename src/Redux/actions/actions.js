@@ -9,3 +9,5 @@ export const GET_ONE_SPACE = 'GET_ONE_SPACE'; // Getting user data
 export const GET_ONWAIT_BOOKINGS = 'GET_ONWAIT_BOOKINGS'; // Getting user data
 export const GET_MY_NOTIFICATIONS = 'GET_MY_NOTIFICATIONS'; // Getting user data
 export const GET_BOOKINGS = 'GET_BOOKINGS'; // Getting user data
+
+export const CHANGE_THEME = 'CHANGE_THEME'; // Getting user data

@@ -40,7 +40,11 @@ const InformationPanel = ({ profileData }) => {
             <Typography>{label}: </Typography>
 
             <Typography
-              sx={isDisableText ? { color: 'gray' } : { color: '#000' }}
+              sx={
+                isDisableText
+                  ? { color: 'text.disabled' }
+                  : { color: '.text.primary' }
+              }
             >
               {value}
             </Typography>

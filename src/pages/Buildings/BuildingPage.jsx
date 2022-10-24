@@ -21,6 +21,7 @@ import {
   MdOutlinePersonAddAlt,
   MdOutlinePersonRemove,
   MdOutlineMeetingRoom,
+  MdOutlinePersonRemoveAlt1,
   MdOutlineNoMeetingRoom,
   MdOutlineRoomPreferences,
 } from 'react-icons/md';
@@ -213,7 +214,7 @@ const BuildingPage = () => {
             );
           }}
           variant="outlined"
-          startIcon={<MdOutlinePersonAddAlt />}
+          startIcon={<MdOutlinePersonRemoveAlt1 />}
           sx={{
             marginTop: '2em',
             backgroundColor: 'error.main',
