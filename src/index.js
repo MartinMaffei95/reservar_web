@@ -13,13 +13,25 @@ import store from './Redux/store';
 // TOAST
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useResize } from './Hooks/useResize';
+import { Helmet } from 'react-helmet';
+import Loader from './Components/Loader';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ToastContainer />
 
     <Provider store={store}>
+      {/* {} */}
+      <Loader />
+      <Helmet>
+        <meta charSet="utf-8" />
+        <meta
+          name="description"
+          content="Reservá zonas comunes de tu edificio"
+        />
+        <meta name="keywords" content="Reservar,Edificios,Zoom, Area común" />
+        <meta name="martin" content="123" />
+      </Helmet>
       <AppRoutes />
     </Provider>
   </React.StrictMode>

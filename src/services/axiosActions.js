@@ -35,7 +35,7 @@ export const postAction = (endpoint, body) => {
     },
     data: body,
   });
-  return request.then((res) => res.data);
+  return request;
 };
 
 export const deleteAction = (endpoint, body) => {

@@ -6,6 +6,7 @@ import CardInviteRequest from '../../Components/CardInviteRequest';
 
 import { Grid, Paper, Typography } from '@mui/material/';
 import { titleStyle } from '../../muiStyles';
+import { Helmet } from 'react-helmet';
 
 const BuildingRequests = () => {
   const { data, loading, error, fetchGetData } = useFetch(

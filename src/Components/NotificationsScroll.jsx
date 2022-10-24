@@ -95,29 +95,35 @@ const NotificationsScroll = ({ id }) => {
       next={loadMoreNotifications}
       // next={test}
       hasMore={hasNextPage}
-      height={'240px'}
+      height={notifications?.length <= 0 ? undefined : '240px'}
       scrollableTarget={'testId'}
       loader={
         <MenuItem>
           <Box sx={notificationStyle}>CARGANDO</Box>
         </MenuItem>
       }
-      endMessage={
-        <MenuItem sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Box sx={notificationStyle_last}>No quedan notificaciones</Box>
-        </MenuItem>
-      }
     >
-      {notifications.map((n) =>
-        !n.viewed ? (
-          <MenuItem key={n?._id}>
-            <Box sx={notificationStyle}>{notificationMessage(n)}</Box>
-          </MenuItem>
-        ) : (
-          <MenuItem sx={{ background: '#ebebeb', width: '100%' }} key={n?._id}>
-            <Box sx={notificationStyle}>{notificationMessage(n)}</Box>
-          </MenuItem>
-        )
+      {notifications?.length <= 0 ? (
+        <MenuItem>
+          <Box sx={notificationStyle_last}>Nada por aqui!</Box>
+        </MenuItem>
+      ) : (
+        <>
+          {notifications.map((n) =>
+            !n.viewed ? (
+              <MenuItem key={n?._id}>
+                <Box sx={notificationStyle}>{notificationMessage(n)}</Box>
+              </MenuItem>
+            ) : (
+              <MenuItem
+                sx={{ background: '#ebebeb', width: '100%' }}
+                key={n?._id}
+              >
+                <Box sx={notificationStyle}>{notificationMessage(n)}</Box>
+              </MenuItem>
+            )
+          )}
+        </>
       )}
     </InfiniteScroll>
   );

@@ -27,6 +27,7 @@ import { getMyProfileData } from '../Redux/actions/userActions';
 //  NOTIFICATIONS
 // TOAST
 import { ToastContainer } from 'react-toastify';
+import { Helmet } from 'react-helmet';
 const AppRoutes = () => {
   const RequireAuth = ({ children }) => {
     const dispatch = useDispatch();
@@ -79,6 +80,9 @@ const AppRoutes = () => {
             path=""
             element={
               <RequireAuth>
+                <Helmet>
+                  <title>Mis edificios | TakeZoom</title>
+                </Helmet>
                 <Buildings />
               </RequireAuth>
             }
@@ -87,6 +91,9 @@ const AppRoutes = () => {
             path="create" // Use this route to create a new building
             element={
               <RequireAuth>
+                <Helmet>
+                  <title>Crear edificio | TakeZoom</title>
+                </Helmet>
                 <CreateBuilding />
               </RequireAuth>
             }
@@ -104,6 +111,9 @@ const AppRoutes = () => {
             path=":buildingId/create" // Use this route to create a new space in buildings
             element={
               <RequireAuth>
+                <Helmet>
+                  <title>Crear zona común | TakeZoom</title>
+                </Helmet>
                 <CreateSpace />
               </RequireAuth>
             }
@@ -136,6 +146,9 @@ const AppRoutes = () => {
             path=":buildingId/notifications"
             element={
               <RequireAuth>
+                <Helmet>
+                  <title> Notificaciones | TakeZoom </title>
+                </Helmet>
                 <Notifications />
               </RequireAuth>
             }
@@ -149,6 +162,9 @@ const AppRoutes = () => {
             path=""
             element={
               <RequireAuth>
+                <Helmet>
+                  <title> Mis reservas | TakeZoom </title>
+                </Helmet>
                 <Bookings isPage />
               </RequireAuth>
             }
@@ -157,6 +173,9 @@ const AppRoutes = () => {
             path="create"
             element={
               <RequireAuth>
+                <Helmet>
+                  <title> Crear reserva | TakeZoom </title>
+                </Helmet>
                 <CreateBookings />
               </RequireAuth>
             }
@@ -170,6 +189,9 @@ const AppRoutes = () => {
             path="profile"
             element={
               <RequireAuth>
+                <Helmet>
+                  <title> Mi usuario | TakeZoom </title>
+                </Helmet>
                 <MyProfile />
               </RequireAuth>
             }
@@ -178,6 +200,9 @@ const AppRoutes = () => {
             path="requests"
             element={
               <RequireAuth>
+                <Helmet>
+                  <title> Invitaciones | TakeZoom </title>
+                </Helmet>
                 <BuildingRequests />
               </RequireAuth>
             }
@@ -185,8 +210,28 @@ const AppRoutes = () => {
         </Route>
 
         {/* ## Login page ## */}
-        <Route path="/login" element={<Login />}></Route>
-        <Route path="/register" element={<Register />}></Route>
+        <Route
+          path="/login"
+          element={
+            <>
+              <Helmet>
+                <title> Ingresar | TakeZoom </title>
+              </Helmet>
+              <Login />
+            </>
+          }
+        ></Route>
+        <Route
+          path="/register"
+          element={
+            <>
+              <Helmet>
+                <title> Registrarme | TakeZoom </title>
+              </Helmet>
+              <Register />
+            </>
+          }
+        ></Route>
       </Routes>
     </BrowserRouter>
   );

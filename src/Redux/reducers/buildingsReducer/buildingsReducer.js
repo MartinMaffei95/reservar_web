@@ -6,11 +6,13 @@ import {
   LOADING,
   GET_ONWAIT_BOOKINGS,
   GET_BOOKINGS,
+  GET_ONE_SPACE,
 } from '../../actions/actions';
 
 const initialStore = {
   loading: false,
   buildingFetchedData: {},
+  bulidingFetched_Space: {},
   buildingFetched_Bookings: {},
   bookings: [],
   onWaitBookings: [],
@@ -29,6 +31,13 @@ export const buildingsReducer = (state = initialStore, action) => {
         ...state,
         loading: false,
         buildingFetchedData: action.payload,
+        // action?.payload.map((s) =>s?.standByBookings?.map((b) => buildingFetched_Bookings.push(b))
+      };
+    case GET_ONE_SPACE: //## APP IS LOADING - THIS ACTION ONLY PUT LOADING TREO OR FALSE
+      return {
+        ...state,
+        loading: false,
+        bulidingFetched_Space: action.payload,
         // action?.payload.map((s) =>s?.standByBookings?.map((b) => buildingFetched_Bookings.push(b))
       };
     case GET_BOOKINGS: //## APP IS LOADING - THIS ACTION ONLY PUT LOADING TREO OR FALSE

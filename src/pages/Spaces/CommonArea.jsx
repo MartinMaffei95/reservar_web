@@ -12,20 +12,37 @@ import moment from 'moment';
 import { accordionSummaryStyle } from '../../muiStyles';
 import { useDispatch, useSelector } from 'react-redux';
 import ReservationsAccordeon from '../../Components/ReservationsAccordeon';
-import { getBookingsOfSpace } from '../../Redux/actions/buildingsActions';
+import {
+  getBookingsOfSpace,
+  getSpecificSpace,
+} from '../../Redux/actions/buildingsActions';
 import { helpText } from '../../tootipsTexts';
+import { Helmet } from 'react-helmet';
 
 const CommonArea = () => {
-  let { spaceId } = useParams();
+  let { buildingId, spaceId } = useParams();
   const navigate = useNavigate();
   const { data, loading, error } = useFetch(`bookings/?spaceId=${spaceId}`);
   const dispatch = useDispatch();
-  dispatch(getBookingsOfSpace(spaceId));
 
-  // MY BOOKINGS -use this for set object "bookings" and send to calendarPicker
+  const thisSpace = useSelector(
+    (state) => state?.buildingsReducer?.bulidingFetched_Space
+  );
+
+  useEffect(() => {
+    dispatch(getSpecificSpace(spaceId));
+    dispatch(getBookingsOfSpace(spaceId));
+  }, []);
 
   return (
     <div>
+      <Helmet>
+        <title>
+          {' '}
+          {thisSpace?.name || 'Area común'} |{' '}
+          {thisSpace?.fromBuilding?.name || 'TakeZoom'}
+        </title>
+      </Helmet>
       <Header backButton title={'Zona comun - &&NOMBRE+SALA&&'} />
       <Box sx={{ display: 'flex' }}>
         <Typography>Reservas de este mes</Typography>

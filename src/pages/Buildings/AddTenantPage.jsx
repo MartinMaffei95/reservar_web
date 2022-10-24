@@ -17,6 +17,7 @@ import usePostFetch from '../../Hooks/usePostFetch';
 import { findeItems, titleStyle } from '../../muiStyles';
 import useDeleteFetch from '../../Hooks/useDeleteFetch';
 import AddTenantButton from '../../molecules/AddTenantButton';
+import { Helmet } from 'react-helmet';
 const AddTenantPage = () => {
   let { buildingId } = useParams();
   const [results, setResults] = useState();
@@ -55,11 +56,15 @@ const AddTenantPage = () => {
 
   useEffect(() => {
     setBuildingData(buildingFetch?.data?.building);
+    console.log(buildingFetch?.data?.building);
     setResults(data?.user);
   }, [buildingFetch?.loading, loading]);
 
   return (
     <div>
+      <Helmet>
+        <title>Agregar inquilino | {buildingData?.name || 'TakeZoom'}</title>
+      </Helmet>
       <Header backButton title={'Agrega inquilinos'} />
 
       <Grid

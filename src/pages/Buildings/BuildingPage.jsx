@@ -33,6 +33,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { makeToast, removeTenant } from '../../Redux/actions/buildingsActions';
 import { useBuildings } from '../../Hooks/useBuildings';
 import { BookingsAccordion } from '../../Components/BookingsAccordion';
+import { Helmet } from 'react-helmet';
 
 const BuildingPage = () => {
   let { buildingId } = useParams();
@@ -64,6 +65,9 @@ const BuildingPage = () => {
 
   return (
     <div>
+      <Helmet>
+        <title> {building?.name || 'TakeZoom'} | TakeZoom </title>
+      </Helmet>
       <Header backButton title={'Informacion del edificio'} />
       <Grid
         container

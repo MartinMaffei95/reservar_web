@@ -6,6 +6,7 @@ import {
   GET_ONE_BUILDING,
   GET_ONWAIT_BOOKINGS,
   GET_BOOKINGS,
+  GET_ONE_SPACE,
 } from './actions';
 import axios from 'axios';
 import { deleteAction, postAction } from '../../services/axiosActions';
@@ -30,6 +31,10 @@ export const getOneBuilding = (userData) => ({
   type: GET_ONE_BUILDING,
   payload: userData,
 });
+export const getOneSpace = (spaceData) => ({
+  type: GET_ONE_SPACE,
+  payload: spaceData,
+});
 
 export const getBookingsOnWait = (bookings) => ({
   type: GET_ONWAIT_BOOKINGS,
@@ -40,6 +45,7 @@ export const getBookings = (bookings) => ({
   type: GET_BOOKINGS,
   payload: bookings,
 });
+// /spaces/63470289eb253d81c2e7544a
 
 export const getSpecificBuilding = (building_id) => async (dispatch) => {
   dispatch(loading(true));
@@ -56,11 +62,32 @@ export const getSpecificBuilding = (building_id) => async (dispatch) => {
       res?.data?.building?.spaces?.map((s) =>
         s?.standByBookings.map((b) => waitBookings.push(b))
       );
-
+      dispatch(loading(false));
       dispatch(getBookingsOnWait(waitBookings));
       dispatch(getOneBuilding(res?.data?.building));
     })
     .catch((err) => {
+      dispatch(loading(false));
+      dispatch(requestFailure(err));
+    });
+};
+
+export const getSpecificSpace = (space_id) => async (dispatch) => {
+  dispatch(loading(true));
+
+  axios(`${process.env.REACT_APP_URI}/spaces/${space_id}`, {
+    method: 'GET',
+    headers: {
+      contentType: 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  })
+    .then((res) => {
+      dispatch(loading(false));
+      dispatch(getOneSpace(res?.data?.space));
+    })
+    .catch((err) => {
+      dispatch(loading(false));
       dispatch(requestFailure(err));
     });
 };
@@ -88,9 +115,11 @@ export const getBookingsOfSpace = (spaceId) => async (dispatch) => {
           }
         }
       });
+      dispatch(loading(false));
       dispatch(getBookings({ onWaitBookings, confirmedBookings }));
     })
     .catch((err) => {
+      dispatch(loading(false));
       dispatch(requestFailure(err));
     });
 };
@@ -112,8 +141,10 @@ export const getOnHoldBookings = (building_id) => async (dispatch) => {
       );
 
       dispatch(getBookingsOnWait(waitBookings));
+      dispatch(loading(false));
     })
     .catch((err) => {
+      dispatch(loading(false));
       dispatch(requestFailure(err));
     });
 };
@@ -125,6 +156,7 @@ export const removeTenant = (userId, body, building_id) => async (dispatch) => {
     dispatch(loading(false));
     dispatch(getSpecificBuilding(building_id));
   } catch (error) {
+    dispatch(loading(false));
     alert(error.response.data.message);
   }
 };
@@ -212,7 +244,25 @@ export function makeSwal(status, title, text, btnText) {
           buttonsStyling: false,
         });
         break;
-
+      case 'success':
+        withReactContent(Swal)
+          .fire({
+            title: title,
+            icon: 'success',
+            text: text,
+            focusConfirm: true,
+            confirmButtonText: btnText || 'Aceptar',
+            background: '#fff',
+            customClass: {
+              actions: 'test',
+              confirmButton: 'btn primary',
+            },
+            buttonsStyling: false,
+          })
+          .then((result) => {
+            return result;
+          });
+        break;
       default:
         break;
     }

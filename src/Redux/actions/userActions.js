@@ -88,9 +88,11 @@ export const getNotifications =
             },
           })
         );
+        dispatch(loading(false));
       })
       .catch((err) => {
         dispatch(requestFailure(err));
+        dispatch(loading(false));
       });
   };
 
