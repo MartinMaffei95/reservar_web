@@ -105,11 +105,11 @@ export const getBookingsOfSpace = (spaceId) => async (dispatch) => {
   })
     .then((res) => {
       res?.data?.bookings?.map((booking) => {
-        if (booking?.reservationAccepted === true) {
+        if (booking?.status === 'ACEPTED') {
           if (!confirmedBookings?.includes(booking)) {
             confirmedBookings?.push(booking);
           }
-        } else if (booking?.reservationAccepted === false) {
+        } else if (booking?.status === 'ON_WAIT') {
           if (!onWaitBookings?.includes(booking)) {
             onWaitBookings?.push(booking);
           }

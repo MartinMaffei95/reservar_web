@@ -1,102 +1,21 @@
 import { useEffect, useState } from 'react';
 import Header from '../../Components/Header';
-
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useFetch from '../../Hooks/useFetch';
 
 //MUI importation
-import {
-  Box,
-  Paper,
-  Button,
-  Card,
-  Typography,
-  CardContent,
-  CardActions,
-  Grid,
-  Icon,
-} from '@mui/material/';
+import { Box, Paper, Button, Typography, Grid } from '@mui/material/';
 //ICONS
 
-import { AiOutlineCheckCircle, AiOutlineClockCircle } from 'react-icons/ai';
-import { TbCalendarStats, TbCalendarEvent } from 'react-icons/tb';
-import { HiOutlineOfficeBuilding } from 'react-icons/hi';
-import { MdMeetingRoom } from 'react-icons/md';
 //MOMENT JS
 import moment from 'moment';
 import {
-  bookingCard,
   bookingCardContainer,
-  bookingData,
-  buildingCard,
-  buildingCardContainer,
   resizeAsideStyle,
   titleStyle,
 } from '../../muiStyles';
-import useTranslate from '../../Hooks/useTranslate';
-import translate from '../../functions/translate';
 import { useResize } from '../../Hooks/useResize';
-
-const BookingCard = ({
-  buildingName,
-  building_id,
-  spaces,
-  space_id,
-  date,
-  time,
-  redirect,
-  confirmed,
-}) => (
-  <Card variant="outlined" sx={bookingCard}>
-    <CardContent>
-      <Box sx={bookingData}>
-        <Icon>
-          <TbCalendarEvent />
-        </Icon>
-        <Typography>
-          {date} | {translate(time)}
-        </Typography>
-      </Box>
-      <Link className="nsLink" to={`/buildings/${building_id}`}>
-        <Box sx={bookingData}>
-          <Icon>
-            <HiOutlineOfficeBuilding />
-          </Icon>
-          <Typography sx={{ fontSize: 14 }} color="text.secondary">
-            {buildingName}
-          </Typography>
-        </Box>
-      </Link>
-      <Link className="nsLink" to={`/buildings/${building_id}/${space_id}`}>
-        <Box sx={bookingData}>
-          <Icon>
-            <MdMeetingRoom />
-          </Icon>
-          <Typography color="text.secondary">{spaces}</Typography>
-        </Box>
-      </Link>
-
-      <Box component="div" sx={bookingData}>
-        <Icon sx={{ color: confirmed === true ? 'success.main' : 'info.main' }}>
-          {confirmed === true ? (
-            <AiOutlineCheckCircle />
-          ) : (
-            <AiOutlineClockCircle />
-          )}
-        </Icon>
-
-        <Typography color={confirmed === true ? 'success.main' : 'info.main'}>
-          {confirmed === true ? 'CONFIRMADA' : 'EN ESPERA'}
-        </Typography>
-      </Box>
-    </CardContent>
-    {/* <CardActions>
-      <Button startIcon={<TbCalendarStats />} onClick={redirect} size="small">
-        Ver todas
-      </Button>
-    </CardActions> */}
-  </Card>
-);
+import { BookingCard } from '../../molecules/BookingCard';
 
 const Bookings = ({ isPage, disableBtn }) => {
   const [bookings, setBookings] = useState();
@@ -164,7 +83,7 @@ const Bookings = ({ isPage, disableBtn }) => {
                 spaces={booking?.space?.name}
                 date={moment(booking?.date).format('MM/DD/YY')}
                 time={booking?.time}
-                confirmed={booking?.reservationAccepted}
+                status={booking?.status}
                 redirect={() => {
                   navigate(
                     `/buildings/${booking?.building?._id}/${booking?.space?._id}`

@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
-import { Routes, Route, useParams, useNavigate } from 'react-router-dom';
+import {  useParams, useNavigate } from 'react-router-dom';
 import Header from '../../Components/Header';
 import {
-  Box,
   Button,
-  Card,
   Typography,
-  CardContent,
-  CardActions,
   Grid,
   Accordion,
   AccordionSummary,
@@ -22,8 +18,6 @@ import {
   MdOutlinePersonRemove,
   MdOutlineMeetingRoom,
   MdOutlinePersonRemoveAlt1,
-  MdOutlineNoMeetingRoom,
-  MdOutlineRoomPreferences,
 } from 'react-icons/md';
 import {
   accordeonStyle,
@@ -31,7 +25,7 @@ import {
   titleStyle,
 } from '../../muiStyles';
 import { useSelector, useDispatch } from 'react-redux';
-import { makeToast, removeTenant } from '../../Redux/actions/buildingsActions';
+import { removeTenant } from '../../Redux/actions/buildingsActions';
 import { useBuildings } from '../../Hooks/useBuildings';
 import { BookingsAccordion } from '../../Components/BookingsAccordion';
 import { Helmet } from 'react-helmet';
@@ -123,11 +117,13 @@ const BuildingPage = () => {
                 key={s._id}
                 sx={{ display: 'flex', justifyContent: 'space-between' }}
               >
-                <Typography>
-                  <Link className="nsLink" to={`${s._id}`}>
+                <Link to={`${s._id}`}>
+                  <Typography
+                    sx={{ color: 'text.primary', textDecoration: 'underline' }}
+                  >
                     {s.name}
-                  </Link>
-                </Typography>
+                  </Typography>
+                </Link>
                 {isReserved(s?.bookings) ? 'RESERVADO' : 'LIBRE'}
               </AccordionDetails>
             ))

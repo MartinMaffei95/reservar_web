@@ -22,7 +22,6 @@ import { Helmet } from 'react-helmet';
 const CommonArea = () => {
   let { buildingId, spaceId } = useParams();
   const navigate = useNavigate();
-  const { data, loading, error } = useFetch(`bookings/?spaceId=${spaceId}`);
   const dispatch = useDispatch();
 
   const thisSpace = useSelector(
@@ -38,7 +37,6 @@ const CommonArea = () => {
     <div>
       <Helmet>
         <title>
-          {' '}
           {thisSpace?.name || 'Area común'} |{' '}
           {thisSpace?.fromBuilding?.name || 'TakeZoom'}
         </title>

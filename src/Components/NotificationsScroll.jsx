@@ -106,7 +106,9 @@ const NotificationsScroll = ({ id }) => {
 
   const minutesStyle = {
     position: 'absolute',
-    // fontSize: '10px',
+    fontSize: 1,
+    fontWeight: 100,
+    color: 'text.secondary',
     bottom: 0,
     right: 0,
     fontSize: '8px',
@@ -134,19 +136,16 @@ const NotificationsScroll = ({ id }) => {
           {notifications.map((n) =>
             !n.viewed ? (
               <MenuItem
-                sx={{ backgroundColor: 'action.disabled', width: '100%' }}
+                sx={{ backgroundColor: 'action.selected', width: '100%' }}
                 key={n?._id}
               >
                 <Box sx={notificationStyle}>{notificationMessage(n)}</Box>
                 <Typography sx={minutesStyle}>
-                  {toMinutes(n?.creattedAt)}
+                  {toMinutes(n?.createdAt)}
                 </Typography>
               </MenuItem>
             ) : (
-              <MenuItem
-                sx={{ backgroundColor: 'action.selected', width: '100%' }}
-                key={n?._id}
-              >
+              <MenuItem sx={{ width: '100%' }} key={n?._id}>
                 <Box sx={notificationStyle}>{notificationMessage(n)}</Box>
                 <Typography sx={minutesStyle}>
                   {toMinutes(n?.createdAt)}

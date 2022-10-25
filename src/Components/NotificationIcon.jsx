@@ -66,9 +66,6 @@ const NotificationIcon = () => {
     setUnviewedNotifications(notifications?.filter((n) => n?.viewed === false));
     setOpen(true);
     setAnchorEl(event?.currentTarget);
-    if (unviewedNotifications?.length > 0) {
-      viewNotifications();
-    }
   };
   const handleClose = () => {
     setUnviewedNotifications(notifications?.filter((n) => n?.viewed === false));

@@ -23,6 +23,7 @@ const DarkModeChanger = () => {
 
   const handleChange = (event) => {
     dispatch(changeTheme(event.target.checked));
+    localStorage.setItem('darkOn', event.target.checked);
   };
 
   return (

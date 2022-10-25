@@ -8,7 +8,7 @@ import {
 
 const initialStore = {
   loading: false,
-  darkOn: false, //false for 'light' or true for 'dark'
+  darkOn: localStorage.getItem('darkOn') || false, //false for 'light' or true for 'dark' || first validate localStorage if no exist use 'light' theme
   myUserInformation: {},
   allNotifications: [],
   pageData: {

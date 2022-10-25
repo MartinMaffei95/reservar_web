@@ -1,12 +1,18 @@
-import React from 'react';
-import { Grid, Box, TextField, Button, Typography } from '@mui/material';
-import usePostFetch from '../Hooks/usePostFetch';
+import React, { useState } from 'react';
+import {
+  Grid,
+  Box,
+  TextField,
+  Button,
+  Typography,
+  InputAdornment,
+  IconButton,
+} from '@mui/material';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { initialFormStyle, titleBox } from '../muiStyles';
-
+import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 //SWAL
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -24,8 +30,13 @@ const Register = () => {
     passwordConfirmation: '',
   };
 
+  const [showPass, setShowPass] = useState(false);
   const keyAction = (e) => {
     if (e.key === 'Enter') e.preventDefault();
+  };
+
+  const handleClickShowPassword = () => {
+    setShowPass((currenValue) => !currenValue);
   };
 
   const onSubmit = async () => {
@@ -156,10 +167,28 @@ const Register = () => {
           label="Tu contraseña"
           placeholder="MiContraseñaSegura123"
           name={'password'}
+          type={showPass === false ? 'password' : 'text'}
           value={values?.password}
           onChange={handleChange}
           onBlur={handleBlur}
           onKeyDown={keyAction}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  edge="end"
+                >
+                  {showPass === false ? (
+                    <AiOutlineEye />
+                  ) : (
+                    <AiOutlineEyeInvisible />
+                  )}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
 
         <TextField
@@ -176,10 +205,28 @@ const Register = () => {
           id="outlined-required"
           label="Repeti la contraseña"
           name={'passwordConfirmation'}
+          type={showPass === false ? 'password' : 'text'}
           value={values?.passwordConfirmation}
           onChange={handleChange}
           onBlur={handleBlur}
           onKeyDown={keyAction}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  edge="end"
+                >
+                  {showPass === false ? (
+                    <AiOutlineEye />
+                  ) : (
+                    <AiOutlineEyeInvisible />
+                  )}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
         <Button type="submit" fullWidth variant="contained" disableElevation>
           Registrarme

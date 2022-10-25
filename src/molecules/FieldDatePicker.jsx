@@ -99,6 +99,9 @@ const FieldDatePicker = ({
       nightBookings,
       allDayBookings,
     });
+    console.log({
+      bookings,
+    });
   }, [bookings]);
 
   return (

@@ -1,4 +1,5 @@
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { FiBell } from 'react-icons/fi';
 
 export const helpText = (
   <>
@@ -22,13 +23,13 @@ export const configuration_helpText = (
       <AiOutlineEye /> Puedes habilitar para que vean tu informacion con el
       icono del ojo
     </div>
+    <div>
+      <FiBell /> Alertas vía mail: Puedes habilitarlas todas o personalizarlas y
+      recibir solo la de los edificios que te interesan.
+    </div>
     {/* <div>
-        <FiBell /> Alertas vía mail: Puedes habilitarlas todas o personalizarlas
-        y recibir solo la de los edificios que te interesan.
-      </div>
-      <div>
-        <FiBell /> Si quieres que se te notificará cuando te inviten a un nuevo
-        edificio
-      </div> */}
+      <FiBell /> Si quieres que se te notificará cuando te inviten a un nuevo
+      edificio
+    </div> */}
   </>
 );
