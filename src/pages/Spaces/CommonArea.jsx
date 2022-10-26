@@ -14,6 +14,7 @@ import {
 } from '../../Redux/actions/buildingsActions';
 import { helpText } from '../../tootipsTexts';
 import { Helmet } from 'react-helmet';
+import MyToolTip from '../../molecules/MyToolTip';
 
 const CommonArea = () => {
   let { buildingId, spaceId } = useParams();
@@ -38,13 +39,9 @@ const CommonArea = () => {
         </title>
       </Helmet>
       <Header backButton title={`Zona comun - ${thisSpace?.name}`} />
-      <Box sx={{ display: 'flex' }}>
-        <Typography>Reservas de este mes</Typography>
-        <Tooltip arrow title={helpText}>
-          <Icon>
-            <AiFillQuestionCircle />
-          </Icon>
-        </Tooltip>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Typography variant={'h4'}>Reservas de este mes</Typography>
+        <MyToolTip inline icon={<AiFillQuestionCircle />} text={helpText} />
       </Box>
 
       <FieldDatePicker onlyCalendar />

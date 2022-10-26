@@ -28,7 +28,7 @@ export const BookingCard = ({
       case 'ACEPTED':
         return (
           <Box component="div" sx={bookingData}>
-            <Icon sx={{ color: 'success.main' }}>
+            <Icon sx={{ color: 'success.main', height: 'max-content' }}>
               <AiOutlineCheckCircle />
             </Icon>
             <Typography color={'success.main'}>CONFIRMADA</Typography>
@@ -37,7 +37,7 @@ export const BookingCard = ({
       case 'DENY':
         return (
           <Box component="div" sx={bookingData}>
-            <Icon sx={{ color: 'error.main' }}>
+            <Icon sx={{ color: 'error.main', height: 'max-content' }}>
               <MdClose />
             </Icon>
             <Typography color={'error.main'}>CANCELADA</Typography>
@@ -46,7 +46,7 @@ export const BookingCard = ({
       case 'ON_WAIT':
         return (
           <Box component="div" sx={bookingData}>
-            <Icon sx={{ color: 'info.main' }}>
+            <Icon sx={{ color: 'info.main', height: 'max-content' }}>
               <AiOutlineClockCircle />
             </Icon>
             <Typography color={'info.main'}>EN ESPERA</Typography>

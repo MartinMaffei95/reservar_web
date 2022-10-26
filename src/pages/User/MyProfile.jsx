@@ -113,7 +113,8 @@ const MyProfile = () => {
                   sx={{
                     display: 'flex',
                     justifyContent: 'space-evenly',
-                    marginBottom: '1em',
+                    alignItems: 'center',
+                    marginBlock: '.5em',
                   }}
                 >
                   <Button

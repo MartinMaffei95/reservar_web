@@ -138,6 +138,7 @@ const CreateBookings = () => {
       setDisabled(true);
     }
   }, [spaceIndex, buildingIndex]);
+
   return (
     <div>
       <Header backButton title={'Creando reserva'} />
