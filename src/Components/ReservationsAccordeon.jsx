@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 
 const ReservationsAccordeon = () => {
   const bookings = useSelector((state) => state.buildingsReducer.bookings);
+
   return (
     <Accordion elevation={4}>
       <AccordionSummary
